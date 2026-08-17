@@ -156,6 +156,14 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
   const Icon = service.icon;
   const related = services.filter((s) => s.slug !== service.slug).slice(0, 3);
 
+  // Assigned to locals (rather than indexing the Record inline in the JSX
+  // below) so TypeScript can actually narrow away the `| undefined` from
+  // the lookup — a computed member expression like `map[key]` doesn't
+  // narrow across the `&&` check when it's repeated inline.
+  const integrationDemo = integrationDemos[service.slug];
+  const discovery = discoveryContent[service.slug];
+  const dashboard = dashboardContent[service.slug];
+
   return (
     <>
       <section className="pb-20 pt-40 md:pb-28 md:pt-48">
@@ -198,15 +206,9 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
         </Container>
       </section>
 
-      {integrationDemos[service.slug] && (
-        <IntegrationDemoPanel {...integrationDemos[service.slug]} />
-      )}
-      {discoveryContent[service.slug] && (
-        <DiscoveryProcessPanel {...discoveryContent[service.slug]} />
-      )}
-      {dashboardContent[service.slug] && (
-        <DashboardPanel {...dashboardContent[service.slug]} />
-      )}
+      {integrationDemo && <IntegrationDemoPanel {...integrationDemo} />}
+      {discovery && <DiscoveryProcessPanel {...discovery} />}
+      {dashboard && <DashboardPanel {...dashboard} />}
 
       <section className="border-t border-canvas-border py-20 md:py-28">
         <Container>

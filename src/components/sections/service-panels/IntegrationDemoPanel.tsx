@@ -25,7 +25,8 @@ export default function IntegrationDemoPanel({
   logoGroups?: LogoGroup[];
 }) {
   const [active, setActive] = useState(0);
-  const tab = tabs[active];
+  const tab = tabs[active] ?? tabs[0];
+  if (!tab) return null;
 
   return (
     <section className="border-t border-canvas-border py-20 md:py-28">
