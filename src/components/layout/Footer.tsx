@@ -3,6 +3,7 @@ import { Linkedin, Twitter, Instagram } from "lucide-react";
 import { site } from "@/data/site";
 import { footerNav } from "@/data/nav";
 import Container from "../ui/Container";
+import Logo from "../ui/Logo";
 import FooterMarquee from "./FooterMarquee";
 
 export default function Footer() {
@@ -12,7 +13,8 @@ export default function Footer() {
       <Container className="py-20">
         <div className="grid gap-14 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <Link href="/" className="font-display text-xl font-semibold text-ink">
+            <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-semibold text-ink">
+              <Logo size={34} />
               {site.name}
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">

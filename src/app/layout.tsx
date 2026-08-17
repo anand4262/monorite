@@ -30,9 +30,6 @@ const mono = Space_Mono({
 export const metadata: Metadata = {
   ...buildMetadata({ title: site.name, description: site.description }),
   metadataBase: new URL(site.url),
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export const viewport: Viewport = {
@@ -44,7 +41,7 @@ export const viewport: Viewport = {
 // Runs before hydration so the correct theme is on <html> for first paint —
 // no flash of the wrong palette. Kept tiny and defensive (try/catch,
 // matchMedia guarded) since it executes outside React's error handling.
-const themeInitScript = `(function(){try{var s=localStorage.getItem('vantage-theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`;
+const themeInitScript = `(function(){try{var s=localStorage.getItem('monorite-theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

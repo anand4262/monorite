@@ -92,7 +92,7 @@ async function sendEmail(fields: {
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL ?? site.email;
-  const from = process.env.CONTACT_FROM_EMAIL ?? "no-reply@vantage-ai.example";
+  const from = process.env.CONTACT_FROM_EMAIL ?? "no-reply@monorite.example";
 
   if (!apiKey) {
     // No provider configured yet — log server-side so submissions are never

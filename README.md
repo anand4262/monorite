@@ -1,4 +1,4 @@
-# Vantage AI — Agency Website
+# Monorite — Agency Website
 
 A premium, calm, dark-themed marketing site for an AI automation agency, built with Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, and a React Three Fiber hero.
 

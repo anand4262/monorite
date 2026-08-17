@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
-const STORAGE_KEY = "vantage-theme";
+const STORAGE_KEY = "monorite-theme";
 
 type Theme = "dark" | "light";
 

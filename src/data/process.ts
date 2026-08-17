@@ -1,28 +1,26 @@
 import type { ProcessStep } from "@/types";
 
+// Told as one concrete scenario instead of four generic phase labels — a
+// customer's call at 9pm, answered, and booked before morning. It's a
+// vivid illustration of the process, not the whole of what Monorite builds
+// (see the homepage hero and services for the fuller picture).
 export const process: ProcessStep[] = [
   {
     step: "01",
-    title: "Discover",
+    title: "9:04pm — a call comes in",
     description:
-      "We map how your business actually operates — calls, bookings, handoffs, paperwork — before recommending anything.",
+      "A customer's pipe just burst. Your team's already home for the night.",
   },
   {
     step: "02",
-    title: "Design",
+    title: "The AI assistant answers",
     description:
-      "We design the specific system for your business: which parts should be AI, which should be automated, and which should stay human.",
+      "Trained on your services, pricing, and scheduling — it sounds like your best CSR, not a robot.",
   },
   {
     step: "03",
-    title: "Build",
+    title: "It's booked before sunrise",
     description:
-      "We build and integrate it with the tools you already use, testing against real calls, real jobs, and real edge cases.",
-  },
-  {
-    step: "04",
-    title: "Support",
-    description:
-      "We stay on as your system evolves — direct access to the people who built it, not a ticket queue.",
+      "The job lands straight in your calendar. You walk in tomorrow to a full day, not a voicemail box.",
   },
 ];

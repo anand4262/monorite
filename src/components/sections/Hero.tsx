@@ -22,7 +22,7 @@ export default function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-8 hidden justify-between px-6 md:flex md:px-10"
       >
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-          [ AI Automation Agency ]
+          [ Web · Automation · AI ]
         </span>
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
           [ Est. {site.founded} ]
@@ -32,19 +32,20 @@ export default function Hero() {
       <Container className="relative grid items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <Reveal onMount>
-            <Badge>AI systems for service businesses</Badge>
+            <Badge>Websites, automation &amp; AI systems for service businesses</Badge>
           </Reveal>
           <Reveal onMount delay={0.08}>
             <h1 className="mt-6 text-balance font-display text-display-xl font-semibold text-ink">
-              AI that runs your business{" "}
-              <span className="text-accent-soft">while you run your day.</span>
+              We connect your website, your calls, and your CRM{" "}
+              <span className="text-accent-soft">into one system that runs itself.</span>
             </h1>
           </Reveal>
           <Reveal onMount delay={0.16}>
             <p className="mt-8 max-w-xl text-balance text-lg leading-relaxed text-ink-muted">
-              We design and build AI call assistants, automation, and custom
-              software for service businesses — so no call, booking, or
-              follow-up ever falls through the cracks.
+              From your website to your call answering to the CRM behind it
+              all — {site.name} designs, builds, and connects the systems
+              your business runs on, including AI voice agents, workflow
+              automation, and agentic AI that acts on your behalf.
             </p>
           </Reveal>
           <Reveal onMount delay={0.24}>

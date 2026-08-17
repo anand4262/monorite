@@ -8,6 +8,132 @@ import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import CTASection from "@/components/sections/CTASection";
+import IntegrationDemoPanel from "@/components/sections/service-panels/IntegrationDemoPanel";
+import DiscoveryProcessPanel from "@/components/sections/service-panels/DiscoveryProcessPanel";
+import DashboardPanel from "@/components/sections/service-panels/DashboardPanel";
+
+// One-off category-specific content, keyed by slug, for the four service
+// pages where a generic bullet list undersells what's actually going on.
+// Everything else still uses the shared template below.
+const integrationDemos: Record<
+  string,
+  { painPoints: string[]; tabs: Parameters<typeof IntegrationDemoPanel>[0]["tabs"]; logoGroups?: { label: string; tools: string[] }[] }
+> = {
+  "systems-integration": {
+    painPoints: [
+      "Someone on your team retyping the same job into three different systems?",
+      "A missed sync between your CRM and your accounting software cost you a client?",
+      "No one can tell you if last night's sync actually ran?",
+    ],
+    tabs: [
+      {
+        label: "CRM sync",
+        columns: ["Contact", "Source", "Synced to", "Status"],
+        rows: [
+          { cells: ["Marcus Reyes", "HubSpot", "Xero + Calendar", "Synced"], status: "ok" },
+          { cells: ["Priya Nandakumar", "Google Form", "CRM + Xero", "Synced"], status: "ok" },
+          { cells: ["Dana Whitfield", "Phone intake", "CRM", "Syncing"], status: "pending" },
+        ],
+      },
+      {
+        label: "Invoicing",
+        columns: ["Invoice", "Customer", "Amount", "Status"],
+        rows: [
+          { cells: ["INV-1042", "Reyes Plumbing & Rooter", "$1,240.00", "Paid"], status: "ok" },
+          { cells: ["INV-1043", "Whitfield Auto Care", "$860.00", "Sent"], status: "pending" },
+          { cells: ["INV-1044", "Lindqvist Home Services", "$2,150.00", "Paid"], status: "ok" },
+        ],
+      },
+      {
+        label: "Calendar",
+        columns: ["Job", "Customer", "Time", "Status"],
+        rows: [
+          { cells: ["Burst pipe repair", "Marcus Reyes", "Tomorrow 9:00am", "Booked"], status: "ok" },
+          { cells: ["Battery check", "Dana Whitfield", "Today 2:30pm", "Booked"], status: "ok" },
+          { cells: ["Site visit", "Priya Nandakumar", "Fri 11:00am", "Pending"], status: "pending" },
+        ],
+      },
+    ],
+    logoGroups: [
+      { label: "Accounting", tools: ["Xero", "QuickBooks"] },
+      { label: "CRM", tools: ["HubSpot", "Salesforce"] },
+      { label: "Scheduling", tools: ["Calendly", "Google Calendar"] },
+      { label: "Comms", tools: ["Slack", "Twilio"] },
+    ],
+  },
+  "ai-business-solutions": {
+    painPoints: [
+      "Your team re-answers the same policy question five times a day?",
+      "Contracts and invoices still get read line by line by a person?",
+      "Nobody can find the one document that actually has the answer?",
+    ],
+    tabs: [
+      {
+        label: "Internal Q&A",
+        columns: ["Question", "Source doc", "Status"],
+        rows: [
+          { cells: ["What's our warranty on labor?", "Service policy v3", "Answered"], status: "ok" },
+          { cells: ["Do we service strata buildings?", "Ops handbook", "Answered"], status: "ok" },
+          { cells: ["Refund window for cancellations?", "Terms doc", "Escalated"], status: "pending" },
+        ],
+      },
+      {
+        label: "Document intelligence",
+        columns: ["Document", "Type", "Status"],
+        rows: [
+          { cells: ["Reyes Plumbing — invoice #4021", "Invoice", "Processed"], status: "ok" },
+          { cells: ["Whitfield Auto — service contract", "Contract", "Processed"], status: "ok" },
+          { cells: ["New vendor agreement", "Contract", "Reviewing"], status: "pending" },
+        ],
+      },
+      {
+        label: "Voice agent",
+        columns: ["Caller", "Reason", "Status"],
+        rows: [
+          { cells: ["+1 555 010 2044", "Quote request", "Booked"], status: "ok" },
+          { cells: ["+1 555 010 8871", "Reschedule", "Handled"], status: "ok" },
+          { cells: ["+1 555 010 3390", "Complex claim", "Escalated"], status: "pending" },
+        ],
+      },
+    ],
+  },
+};
+
+const discoveryContent: Record<
+  string,
+  { problem: string; steps: { title: string; description: string }[]; quote: { text: string; author: string; company: string } }
+> = {
+  "business-process-discovery": {
+    problem:
+      "Most automation projects fail for the same reason: nobody mapped the process before buying the tool. You end up automating the wrong thing, faster.",
+    steps: [
+      { title: "Shadow & interview", description: "We sit with your team through a real week of work." },
+      { title: "Map the process", description: "Every handoff, delay, and workaround, laid out visually." },
+      { title: "Flag the bottlenecks", description: "Ranked by time lost and how fixable they actually are." },
+      { title: "Hand you the roadmap", description: "Yours to keep, even if you never build a thing with us." },
+    ],
+    quote: {
+      text: "Monorite mapped our entire intake process before writing a line of code. What we ended up with actually matches how we work, not the other way around.",
+      author: "Priya Nandakumar",
+      company: "Clearline Dental Group",
+    },
+  },
+};
+
+const dashboardContent: Record<
+  string,
+  { navItems: string[]; kpis: { label: string; value: string }[]; note: string }
+> = {
+  "custom-business-software": {
+    navItems: ["Overview", "Jobs", "Customers", "Invoices", "Reports", "Settings"],
+    kpis: [
+      { label: "Jobs this week", value: "38" },
+      { label: "Revenue MTD", value: "$41.2k" },
+      { label: "Open tickets", value: "3" },
+    ],
+    note: "Six items in the nav, max. Every number updates in real time — no waiting on a weekly report call to know how the business is doing.",
+  },
+};
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -71,6 +197,16 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
           </Reveal>
         </Container>
       </section>
+
+      {integrationDemos[service.slug] && (
+        <IntegrationDemoPanel {...integrationDemos[service.slug]} />
+      )}
+      {discoveryContent[service.slug] && (
+        <DiscoveryProcessPanel {...discoveryContent[service.slug]} />
+      )}
+      {dashboardContent[service.slug] && (
+        <DashboardPanel {...dashboardContent[service.slug]} />
+      )}
 
       <section className="border-t border-canvas-border py-20 md:py-28">
         <Container>

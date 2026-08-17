@@ -2,6 +2,7 @@ import { buildMetadata } from "@/lib/seo";
 import { site } from "@/data/site";
 import Hero from "@/components/sections/Hero";
 import TrustBar from "@/components/sections/TrustBar";
+import ComparisonSlider from "@/components/sections/ComparisonSlider";
 import BigStatement from "@/components/sections/BigStatement";
 import ServicesGrid from "@/components/sections/ServicesGrid";
 import StatsBand from "@/components/sections/StatsBand";
@@ -21,6 +22,7 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustBar />
+      <ComparisonSlider />
       <BigStatement />
       <ServicesGrid limit={6} />
       <StatsBand />

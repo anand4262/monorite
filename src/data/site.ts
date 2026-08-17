@@ -3,7 +3,7 @@
  * Rename the agency by editing this file only — every page reads from here.
  */
 
-const DEFAULT_SITE_URL = "https://www.vantage-ai.example";
+const DEFAULT_SITE_URL = "https://www.monorite.example";
 
 function resolveSiteUrl(): string {
   const candidates = [
@@ -25,19 +25,19 @@ function resolveSiteUrl(): string {
 }
 
 export const site = {
-  name: "Vantage AI",
-  legalName: "Vantage AI Solutions",
+  name: "Monorite",
+  legalName: "Monorite Solutions",
   tagline: "AI systems that run your business while you run your day.",
   description:
-    "Vantage AI designs and builds AI-powered call assistants, automation, and custom software for service businesses — so nothing falls through the cracks.",
+    "Monorite designs and builds websites, AI-powered call assistants, automation, and custom software for service businesses — so nothing falls through the cracks.",
   url: resolveSiteUrl(),
-  email: "hello@vantage-ai.example",
+  email: "hello@monorite.example",
   phone: "+1 (555) 010-2024",
   location: "Remote-first — serving clients worldwide",
   social: {
-    linkedin: "https://linkedin.com/company/vantage-ai",
-    twitter: "https://x.com/vantageai",
-    instagram: "https://instagram.com/vantageai",
+    linkedin: "https://linkedin.com/company/monorite",
+    twitter: "https://x.com/monorite",
+    instagram: "https://instagram.com/monorite",
   },
   founded: 2023,
 };

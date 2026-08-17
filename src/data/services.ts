@@ -1,4 +1,5 @@
 import {
+  Globe,
   Phone,
   Star,
   CalendarClock,
@@ -12,6 +13,23 @@ import {
 import type { Service } from "@/types";
 
 export const services: Service[] = [
+  {
+    slug: "website-online-presence",
+    name: "Website & Online Presence",
+    category: "Digital Presence",
+    icon: Globe,
+    shortDescription:
+      "A fast, SEO-ready website built to bring in work — not sit there as a digital brochure.",
+    description:
+      "A website that shows up on Google, loads fast on every device, and turns a visitor into an enquiry — wired into the same CRM, call assistant, and booking system as everything else we build for you.",
+    outcomes: ["More inbound enquiries", "Higher search visibility", "One connected system, not a standalone brochure site"],
+    bullets: [
+      "Fast on every phone, tablet, and screen",
+      "Structured for SEO — built to be found for what your customers actually search",
+      "Enquiry forms that reach you instantly, so no lead slips through",
+      "Wired into the same CRM, call assistant, and booking system you already use with us",
+    ],
+  },
   {
     slug: "ai-call-text-assistant",
     name: "AI Call & Text Assistant",

@@ -10,7 +10,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     quote:
-      "Vantage mapped our entire intake process before writing a line of code. What we ended up with actually matches how we work, not the other way around.",
+      "Monorite mapped our entire intake process before writing a line of code. What we ended up with actually matches how we work, not the other way around.",
     author: "Priya Nandakumar",
     role: "Operations Director",
     company: "Clearline Dental Group",

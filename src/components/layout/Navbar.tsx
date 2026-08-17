@@ -8,10 +8,19 @@ import { Menu, X } from "lucide-react";
 import { site } from "@/data/site";
 import { mainNav } from "@/data/nav";
 import { cn } from "@/lib/utils";
-import Container from "../ui/Container";
-import Button from "../ui/Button";
+import Logo from "../ui/Logo";
 import ThemeToggle from "../ui/ThemeToggle";
+import Button from "../ui/Button";
 
+/**
+ * A floating "dock" nav instead of a full-bleed bar — detached from the
+ * edges with its own rounded border, so it reads as an object sitting on
+ * top of the page rather than a fixed strip of chrome. The active link is
+ * a pill that slides between items via a shared layoutId rather than a
+ * static underline, and the mobile menu is a full-screen numbered takeover
+ * matching the bracket-label / index-tag language used elsewhere on the
+ * site, instead of a plain dropdown list.
+ */
 export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -38,23 +47,25 @@ export default function Navbar() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-premium",
-        scrolled || open
-          ? "border-b border-canvas-border bg-canvas/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
-      <Container as="nav" className="flex h-20 items-center justify-between" aria-label="Main">
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
+      <nav
+        aria-label="Main"
+        className={cn(
+          "mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full border px-4 transition-all duration-500 ease-premium md:px-5",
+          scrolled || open
+            ? "border-canvas-border bg-canvas/80 shadow-[0_12px_32px_-16px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            : "border-canvas-border/60 bg-canvas/40 backdrop-blur-md",
+        )}
+      >
         <Link
           href="/"
-          className="font-display text-lg font-semibold tracking-tight text-ink"
+          className="flex shrink-0 items-center gap-2.5 font-display text-base font-semibold tracking-tight text-ink"
         >
-          {site.name}
+          <Logo size={30} />
+          <span className="hidden sm:inline">{site.name}</span>
         </Link>
 
-        <div className="hidden items-center gap-10 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {mainNav.map((item) => {
             const active = pathname === item.href;
             return (
@@ -62,14 +73,18 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative text-sm font-medium text-ink-muted transition-colors hover:text-ink",
-                  active && "text-ink",
+                  "relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300",
+                  active ? "text-canvas" : "text-ink-muted hover:text-ink",
                 )}
               >
-                {item.label}
                 {active && (
-                  <span className="absolute -bottom-1.5 left-0 h-px w-full bg-accent" />
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    className="absolute inset-0 -z-10 rounded-full bg-ink"
+                  />
                 )}
+                {item.label}
               </Link>
             );
           })}
@@ -91,34 +106,56 @@ export default function Navbar() {
             aria-label={open ? "Close menu" : "Open menu"}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink"
           >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </Container>
+      </nav>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-canvas-border bg-canvas md:hidden"
+            className="fixed inset-0 -z-10 bg-canvas md:hidden"
           >
-            <Container className="flex flex-col gap-6 py-8">
-              {mainNav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="font-display text-2xl font-medium text-ink"
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Button href="/contact" className="mt-2 w-fit">
-                Start a project
-              </Button>
-            </Container>
+            <div className="flex h-full flex-col justify-center px-8 pb-24 pt-28">
+              {mainNav.map((item, i) => {
+                const active = pathname === item.href;
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 + i * 0.06 }}
+                    className="flex items-center gap-4 border-b border-canvas-border py-4"
+                  >
+                    <span className="font-mono text-xs text-ink-faint">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "font-display text-3xl font-medium",
+                        active ? "text-accent-soft" : "text-ink",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.08 + mainNav.length * 0.06 }}
+              >
+                <Button href="/contact" size="md" className="mt-8">
+                  Start a project
+                </Button>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
