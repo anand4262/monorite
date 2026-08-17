@@ -20,7 +20,7 @@ function withOpacity(variable: string, fallbackAlpha?: number) {
   };
 }
 
-const config: Config = {
+const config = {
   darkMode: "class",
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
@@ -98,4 +98,4 @@ const config: Config = {
   plugins: [],
 };
 
-export default config;
+export default config as unknown as Config;

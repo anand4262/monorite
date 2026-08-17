@@ -27,7 +27,7 @@ export default function Testimonials() {
 
         <div className="mt-20 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
           {testimonials.map((t, i) => {
-            const style = noteStyle[i % noteStyle.length];
+            const style = noteStyle[i % noteStyle.length]!;
             return (
               <div key={t.author} className={style.shift}>
                 <Reveal delay={i * 0.07}>

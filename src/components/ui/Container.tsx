@@ -1,9 +1,11 @@
 import { cn } from "@/lib/utils";
 
+type ContainerElement = "div" | "nav" | "section" | "main" | "article" | "header" | "footer" | "aside";
+
 type ContainerProps = {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ContainerElement;
 } & Omit<React.HTMLAttributes<HTMLElement>, "className" | "children">;
 
 export default function Container({
