@@ -63,7 +63,7 @@ const config = {
         mono: ["var(--font-mono)", "monospace"],
       },
       fontSize: {
-        "display-2xl": ["clamp(4rem, 11vw, 11.5rem)", { lineHeight: "0.9", letterSpacing: "-0.04em" }],
+        "display-2xl": ["clamp(2.25rem, 11vw, 11.5rem)", { lineHeight: "0.9", letterSpacing: "-0.04em" }],
         "display-xl": ["clamp(3rem, 6vw, 7rem)", { lineHeight: "0.98", letterSpacing: "-0.03em" }],
         "display-lg": ["clamp(2.5rem, 4.5vw, 4.75rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
         "display-md": ["clamp(2rem, 3vw, 3rem)", { lineHeight: "1.08", letterSpacing: "-0.02em" }],
@@ -73,7 +73,7 @@ const config = {
       },
       backgroundImage: {
         "grain": "url('/images/grain.png')",
-        "radial-fade": "radial-gradient(circle at 50% 0%, rgba(124,92,255,0.16), transparent 60%)",
+        "radial-fade": "radial-gradient(circle at 50% 0%, rgba(244,243,238,0.1), transparent 60%)",
       },
       transitionTimingFunction: {
         premium: "cubic-bezier(0.16, 1, 0.3, 1)",

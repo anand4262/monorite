@@ -1,26 +1,34 @@
 import type { ProcessStep } from "@/types";
 
-// Told as one concrete scenario instead of four generic phase labels — a
-// customer's call at 9pm, answered, and booked before morning. It's a
-// vivid illustration of the process, not the whole of what Monorite builds
-// (see the homepage hero and services for the fuller picture).
+// The real journey from an actual case study (a cable & internet operator
+// who tracked subscribers on paper — see src/data/projects.ts,
+// cable-pulse-crm) rather than an invented scenario. Chosen over a website
+// story for this section specifically because it's about digitizing a
+// business process end-to-end, which is what "How we work" is meant to
+// demonstrate.
 export const process: ProcessStep[] = [
   {
     step: "01",
-    title: "9:04pm — a call comes in",
+    title: "Discovery",
     description:
-      "A customer's pipe just burst. Your team's already home for the night.",
+      "We spent time understanding how the business actually tracked subscribers day to day, village by village, mostly on paper.",
   },
   {
     step: "02",
-    title: "The AI assistant answers",
+    title: "Design & build",
     description:
-      "Trained on your services, pricing, and scheduling — it sounds like your best CSR, not a robot.",
+      "We designed a simple app around that existing workflow: organize by village, record payments in seconds, calculate dues automatically.",
   },
   {
     step: "03",
-    title: "It's booked before sunrise",
+    title: "Offline-first engineering",
     description:
-      "The job lands straight in your calendar. You walk in tomorrow to a full day, not a voicemail box.",
+      "Field connectivity isn't always reliable, so the app was built to work fully offline and sync automatically once back online.",
+  },
+  {
+    step: "04",
+    title: "Result",
+    description:
+      "The business now runs its books from a phone instead of a notebook, live and in use across Andhra Pradesh and Telangana.",
   },
 ];

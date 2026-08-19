@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildOrganizationJsonLd } from "@/lib/seo";
+import { ReactLenis } from "lenis/react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/ui/Preloader";
@@ -33,23 +34,21 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#08090A",
+  themeColor: "#0B0B0D",
   width: "device-width",
   initialScale: 1,
 };
 
-// Runs before hydration so the correct theme is on <html> for first paint —
-// no flash of the wrong palette. Kept tiny and defensive (try/catch,
-// matchMedia guarded) since it executes outside React's error handling.
-const themeInitScript = `(function(){try{var s=localStorage.getItem('monorite-theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="flex min-h-screen flex-col bg-canvas">
+        <script
+          type="application/ld+json"
+          // Internally-defined, non-user-supplied data — safe to serialize directly.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildOrganizationJsonLd()) }}
+        />
+        <ReactLenis root options={{ anchors: true }} />
         <Preloader />
         <div className="noise-overlay" aria-hidden="true" />
         <a

@@ -28,7 +28,7 @@ const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob:;
+  img-src 'self' data: blob: https://play-lh.googleusercontent.com https://vistalegalfirm.com https://www.vistalegalfirm.com https://kebab-knights.vercel.app https://images.unsplash.com;
   font-src 'self' data:;
   connect-src 'self';
   frame-ancestors 'none';
@@ -68,6 +68,18 @@ const nextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+    ];
+  },
+  // The site consolidated to a single-page homepage (hero, services, work,
+  // and studio all live at / behind anchor links) — these index routes
+  // redirect to their new anchor section. Individual detail pages
+  // (/services/[slug], /work/[slug]) are unaffected: this only matches the
+  // exact index path, not its sub-paths.
+  async redirects() {
+    return [
+      { source: "/about", destination: "/#studio", permanent: true },
+      { source: "/services", destination: "/#services", permanent: true },
+      { source: "/work", destination: "/#work", permanent: true },
     ];
   },
 };

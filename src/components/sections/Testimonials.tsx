@@ -25,11 +25,11 @@ export default function Testimonials() {
           className="mx-auto"
         />
 
-        <div className="mt-20 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
+        <div className="mt-20 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:items-start">
           {testimonials.map((t, i) => {
             const style = noteStyle[i % noteStyle.length]!;
             return (
-              <div key={t.author} className={style.shift}>
+              <div key={`${t.author}-${t.company}`} className={style.shift}>
                 <Reveal delay={i * 0.07}>
                   <figure
                     className={`group/note relative h-full rounded-sm border border-canvas-border bg-canvas-surface p-7 shadow-[0_18px_36px_-24px_rgba(0,0,0,0.5)] transition-all duration-500 ease-premium ${style.rotate} hover:rotate-0 hover:shadow-[0_24px_44px_-20px_rgba(0,0,0,0.6)]`}

@@ -5,7 +5,11 @@ import { projects } from "@/data/projects";
 import { blogPosts } from "@/data/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/about", "/services", "/work", "/blog", "/contact"].map((path) => ({
+  // "/about", "/services", and "/work" are excluded: they permanently
+  // redirect to anchor sections on "/" (see next.config.mjs), so listing
+  // them here would submit redirecting URLs to search engines instead of
+  // the canonical single-page home.
+  const staticRoutes = ["", "/blog", "/contact"].map((path) => ({
     url: `${site.url}${path}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

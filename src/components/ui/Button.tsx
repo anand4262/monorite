@@ -26,8 +26,8 @@ type ButtonAsButton = BaseProps & {
 type ButtonProps = ButtonAsLink | ButtonAsButton;
 
 const variants = {
-  primary: "bg-ink text-canvas hover:bg-accent hover:text-ink",
-  secondary: "border border-canvas-border text-ink hover:border-accent/60 hover:bg-white/5",
+  primary: "bg-ink text-canvas hover:bg-accent-soft",
+  secondary: "border border-canvas-border text-ink hover:border-ink/40 hover:bg-white/5",
   ghost: "text-ink-muted hover:text-ink",
 };
 

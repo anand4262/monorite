@@ -43,30 +43,32 @@ function TimelineStep({
   return (
     <div className={isLast ? "" : "border-b border-canvas-border"}>
       <Reveal blurIn delay={index * 0.08}>
-        <div className="group grid gap-4 rounded-2xl py-10 transition-colors duration-500 ease-premium md:grid-cols-[3.5rem_1fr_1fr] md:items-center md:gap-10 md:py-14 md:hover:-mx-6 md:hover:bg-canvas-surface/40 md:hover:px-6">
-          <span className="relative z-10 h-14 w-14">
+        <div className="group flex gap-4 rounded-2xl py-10 transition-colors duration-500 ease-premium md:grid md:grid-cols-[3.5rem_1fr_1fr] md:items-center md:gap-10 md:py-14 md:hover:-mx-6 md:hover:bg-canvas-surface/40 md:hover:px-6">
+          <span className="relative z-10 h-14 w-14 shrink-0">
             <span className="absolute inset-0 flex items-center justify-center rounded-full border border-canvas-border bg-canvas font-mono text-xs text-ink-faint transition-colors duration-500 ease-premium group-hover:border-accent/50 group-hover:text-accent-soft">
               {step.step}
             </span>
             <motion.span
               aria-hidden="true"
               style={{ opacity: activation, scale: nodeScale }}
-              className="absolute inset-0 flex items-center justify-center rounded-full border border-accent bg-accent/15 font-mono text-xs text-accent-soft shadow-[0_0_22px_6px_rgba(124,92,255,0.4)]"
+              className="absolute inset-0 flex items-center justify-center rounded-full border border-accent bg-accent/15 font-mono text-xs text-accent-soft shadow-[0_0_22px_6px_rgba(244,243,238,0.4)]"
             >
               {step.step}
             </motion.span>
           </span>
 
-          <motion.h3
-            style={{ opacity: titleOpacity }}
-            className="font-display text-2xl font-semibold text-ink transition-colors duration-500 ease-premium md:text-3xl md:group-hover:text-accent-soft"
-          >
-            {step.title}
-          </motion.h3>
+          <div className="min-w-0 flex-1 space-y-2 md:contents md:space-y-0">
+            <motion.h3
+              style={{ opacity: titleOpacity }}
+              className="font-display text-2xl font-semibold text-ink transition-colors duration-500 ease-premium md:text-3xl md:group-hover:text-accent-soft"
+            >
+              {step.title}
+            </motion.h3>
 
-          <p className="text-sm leading-relaxed text-ink-muted md:max-w-md md:justify-self-end md:text-right">
-            {step.description}
-          </p>
+            <p className="text-sm leading-relaxed text-ink-muted md:max-w-md md:justify-self-end md:text-right">
+              {step.description}
+            </p>
+          </div>
         </div>
       </Reveal>
     </div>
@@ -101,7 +103,7 @@ export default function ProcessSteps() {
         <SectionHeading
           eyebrow="How we work"
           title="A process built around your business, not our template"
-          description="Every engagement starts with understanding how you actually operate — technology comes second."
+          description="Every engagement starts with understanding how you actually operate. Technology comes second."
         />
 
         <div ref={trackRef} className="relative mt-16">
@@ -117,7 +119,7 @@ export default function ProcessSteps() {
           <motion.div
             aria-hidden="true"
             style={{ top: markerTop }}
-            className="pointer-events-none absolute left-7 z-20 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-soft shadow-[0_0_16px_4px_rgba(124,92,255,0.6)]"
+            className="pointer-events-none absolute left-7 z-20 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-soft shadow-[0_0_16px_4px_rgba(244,243,238,0.6)]"
           />
 
           {process.map((step, i) => (

@@ -19,7 +19,7 @@ export default function OpengraphImage() {
           justifyContent: "center",
           padding: "80px",
           background:
-            "radial-gradient(circle at 20% 20%, #1a1530 0%, #08090A 55%)",
+            "radial-gradient(circle at 20% 20%, #1a1a1d 0%, #0B0B0D 55%)",
           color: "#F5F4F0",
           fontFamily: "sans-serif",
         }}
@@ -27,7 +27,7 @@ export default function OpengraphImage() {
         <div
           style={{
             fontSize: 28,
-            color: "#A996FF",
+            color: "#D8D0C3",
             letterSpacing: 4,
             textTransform: "uppercase",
             marginBottom: 24,

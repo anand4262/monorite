@@ -1,12 +1,21 @@
 import Container from "@/components/ui/Container";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import Reveal from "@/components/ui/Reveal";
+import { projects } from "@/data/projects";
+import { services } from "@/data/services";
+
+// Every number here is derived directly from the real project/service data
+// (not hand-typed), so it can never drift out of sync with what's actually
+// true — no invented percentages, no "typical"/"average" claims we can't
+// back up.
+const industriesServed = new Set(projects.map((p) => p.industry)).size;
+const googlePlayApps = projects.filter((p) => p.visitUrl?.includes("play.google.com")).length;
 
 const stats = [
-  { value: 92, suffix: "%", label: "Average drop in missed calls" },
-  { value: 30, suffix: "+", label: "Systems designed and shipped" },
-  { value: 4, suffix: "wk", label: "Typical time to first launch" },
-  { value: 100, suffix: "%", label: "Clients with direct build-team access" },
+  { value: projects.length, suffix: "", label: "Real systems shipped" },
+  { value: googlePlayApps, suffix: "", label: "Apps live on Google Play" },
+  { value: industriesServed, suffix: "", label: "Industries served" },
+  { value: services.length, suffix: "", label: "Services offered end-to-end" },
 ];
 
 /**

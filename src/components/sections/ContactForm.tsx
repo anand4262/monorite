@@ -61,7 +61,7 @@ export default function ContactForm() {
         <div>
           <h3 className="font-display text-xl font-semibold text-ink">Message sent</h3>
           <p className="mt-2 text-sm text-ink-muted">
-            Thanks for reaching out — we'll reply within one business day.
+            Thanks for reaching out. We'll reply within one business day.
           </p>
         </div>
       </div>
@@ -112,7 +112,7 @@ export default function ContactForm() {
         type="submit"
         disabled={status === "submitting"}
         className={cn(
-          "inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-base font-medium text-canvas transition-colors duration-300 hover:bg-accent hover:text-ink disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto",
+          "inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-4 text-base font-medium text-canvas transition-colors duration-300 hover:bg-accent-soft disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto",
         )}
       >
         {status === "submitting" && <Loader2 className="h-4 w-4 animate-spin" />}

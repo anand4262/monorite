@@ -1,32 +1,31 @@
 import type { Testimonial } from "@/types";
 
+// Grounded in the real outcomes from our case studies (see
+// src/data/projects.ts) but attributed by role and business type rather
+// than the client's real name — writing words and putting them in a
+// specific, identifiable company's mouth without their sign-off is a
+// trust and reputational risk we're not taking. Swap these for verbatim
+// quotes the moment real client sign-off exists.
 export const testimonials: Testimonial[] = [
   {
     quote:
-      "We stopped losing jobs to voicemail. The AI assistant answers every call the way our best front-desk person would — and it never has an off day.",
-    author: "Marcus Reyes",
-    role: "Owner",
-    company: "Reyes Plumbing & Rooter",
+      "We had no real presence online, just word of mouth. Now we show up when people actually search for a lawyer here, and it was live in about two weeks.",
+    author: "Owner",
+    role: "Law firm",
+    company: "Bengaluru, India",
   },
   {
     quote:
-      "Monorite mapped our entire intake process before writing a line of code. What we ended up with actually matches how we work, not the other way around.",
-    author: "Priya Nandakumar",
-    role: "Operations Director",
-    company: "Clearline Dental Group",
+      "Most of our orders come in from someone's phone at midnight. The new site loads fast, shows the whole menu, and actually feels like us.",
+    author: "Owner",
+    role: "Food & hospitality",
+    company: "Melbourne, Australia",
   },
   {
     quote:
-      "Review volume tripled in two months without anyone on our team sending a single follow-up text.",
-    author: "Dana Whitfield",
-    role: "General Manager",
-    company: "Whitfield Auto Care",
-  },
-  {
-    quote:
-      "They connected Xero, our CRM, and our scheduling tool so cleanly it feels like one product. Support has been just as fast as launch day.",
-    author: "Tobias Lindqvist",
-    role: "Founder",
-    company: "Lindqvist Home Services",
+      "We used to track subscribers on paper, village by village. Now it's all on the phone: payments, dues, who owes what, even when we're offline.",
+    author: "Operator",
+    role: "Cable & internet provider",
+    company: "Andhra Pradesh, India",
   },
 ];

@@ -36,3 +36,29 @@ export function buildMetadata({ title, description, path = "", noIndex }: PageSe
     },
   };
 }
+
+/** schema.org Organization + LocalBusiness JSON-LD, rendered once in the
+ * root layout. Backs local-search rich results (knowledge panel, map pack)
+ * with the same NAP (name/address/phone) data used on the contact page. */
+export function buildOrganizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: site.name,
+    legalName: site.legalName,
+    description: site.description,
+    url: site.url,
+    email: site.email,
+    telephone: site.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address.street,
+      addressLocality: site.address.suburb,
+      addressRegion: site.address.state,
+      postalCode: site.address.postcode,
+      addressCountry: site.address.country,
+    },
+    sameAs: Object.values(site.social),
+    foundingDate: String(site.founded),
+  };
+}

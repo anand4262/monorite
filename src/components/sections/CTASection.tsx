@@ -18,7 +18,7 @@ export default function CTASection() {
         <Reveal delay={0.1}>
           <p className="mt-6 max-w-xl text-balance text-lg text-ink-muted">
             Tell us where time is getting lost. We'll tell you honestly whether
-            AI is the right fix — and what it would take.
+            AI is the right fix, and what it would take.
           </p>
         </Reveal>
         <Reveal delay={0.2} className="mt-10">

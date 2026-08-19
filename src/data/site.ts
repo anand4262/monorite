@@ -3,7 +3,7 @@
  * Rename the agency by editing this file only — every page reads from here.
  */
 
-const DEFAULT_SITE_URL = "https://www.monorite.example";
+const DEFAULT_SITE_URL = "https://www.monorite.com";
 
 function resolveSiteUrl(): string {
   const candidates = [
@@ -27,13 +27,22 @@ function resolveSiteUrl(): string {
 export const site = {
   name: "Monorite",
   legalName: "Monorite Solutions",
-  tagline: "AI systems that run your business while you run your day.",
+  tagline: "We study how your business runs. Then we build the systems that run it.",
   description:
-    "Monorite designs and builds websites, AI-powered call assistants, automation, and custom software for service businesses — so nothing falls through the cracks.",
+    "Monorite helps trades, clinics, and local businesses still running on phone calls and spreadsheets get online, automate the busywork, and put AI voice and chat agents to work: websites, call assistants, custom CRMs, and the systems to run them.",
   url: resolveSiteUrl(),
-  email: "hello@monorite.example",
-  phone: "+1 (555) 010-2024",
-  location: "Remote-first — serving clients worldwide",
+  email: "support@monorite.com",
+  phone: "0468 588 669",
+  // Structured so it can back both the display string (`location`) and
+  // schema.org PostalAddress in JSON-LD, instead of only a freeform string.
+  address: {
+    street: "17A Augusta Crescent",
+    suburb: "Sunshine North",
+    state: "VIC",
+    postcode: "3020",
+    country: "AU",
+  },
+  location: "17A Augusta Crescent, Sunshine North VIC 3020",
   social: {
     linkedin: "https://linkedin.com/company/monorite",
     twitter: "https://x.com/monorite",

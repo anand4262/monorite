@@ -9,7 +9,6 @@ import { site } from "@/data/site";
 import { mainNav } from "@/data/nav";
 import { cn } from "@/lib/utils";
 import Logo from "../ui/Logo";
-import ThemeToggle from "../ui/ThemeToggle";
 import Button from "../ui/Button";
 
 /**
@@ -47,7 +46,12 @@ export default function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
+    <>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-28 bg-gradient-to-b from-canvas via-canvas/70 to-transparent"
+      />
+      <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
       <nav
         aria-label="Main"
         className={cn(
@@ -91,14 +95,12 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <ThemeToggle />
           <Button href="/contact" size="sm">
             Start a project
           </Button>
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-          <ThemeToggle />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -159,6 +161,7 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+      </header>
+    </>
   );
 }

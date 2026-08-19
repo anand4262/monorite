@@ -1,19 +1,18 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { ArrowLeftRight } from "lucide-react";
+import { ArrowLeftRight, Loader2, MapPin, Phone, Search } from "lucide-react";
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import { site } from "@/data/site";
 
 /**
- * A drag-to-compare "before / after" panel — a concrete,
- * tactile way to show the outcome the homepage promises, rather than
- * another paragraph of copy. Pointer position drives a clip-path on the
- * "after" layer so the transition is a hard, obvious wipe rather than a
- * fade, matching the drag-compare pattern used on competitor product
- * sites for exactly this kind of before/after claim.
+ * A drag-to-compare panel illustrating the shift every client goes
+ * through, not one client's specific case. Both sides are abstract,
+ * generic mockups (a bare listing vs. a wireframed site) rather than a
+ * real screenshot, since this section speaks about businesses before and
+ * after Monorite in general, not a single named company.
  */
 export default function ComparisonSlider() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -28,21 +27,27 @@ export default function ComparisonSlider() {
     setSplit(Math.min(96, Math.max(4, pct)));
   }, []);
 
+  // At and right of center the "after" side still reads as loading;
+  // dragging the divider left widens that revealed region, and once it's
+  // open past this point it resolves into the built site, so the reveal
+  // itself mirrors a page finishing its load.
+  const siteLoaded = split < 35;
+
   return (
     <section className="border-t border-canvas-border py-24 md:py-32">
       <Container>
         <SectionHeading
           align="center"
-          eyebrow="See the difference"
+          eyebrow="The shift"
           title={`Before ${site.name}. After ${site.name}.`}
-          description="Same business, same week. Drag the divider."
+          description="What most businesses look like before we start, and what they look like once the system is live. Drag the divider."
           className="mx-auto"
         />
 
         <Reveal blurIn delay={0.1}>
           <div
             ref={wrapRef}
-            className="relative mx-auto mt-14 aspect-[16/8] max-w-3xl select-none overflow-hidden rounded-2xl border border-canvas-border"
+            className="relative mx-auto mt-14 aspect-[16/10] max-w-3xl select-none overflow-hidden rounded-2xl border border-canvas-border shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)]"
             onMouseMove={(e) => {
               if (dragging.current) updateSplit(e.clientX);
             }}
@@ -53,35 +58,108 @@ export default function ComparisonSlider() {
             }}
             onTouchEnd={() => (dragging.current = false)}
           >
-            <div className="absolute inset-0 flex flex-col justify-center bg-canvas-soft px-8 py-8 md:px-12">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-                Before {site.name}
-              </p>
-              <p className="mt-3 font-display text-3xl font-semibold text-ink-muted md:text-4xl">
-                14 missed
-              </p>
-              <p className="mt-2 text-sm text-ink-faint">
-                calls last week, 3 unanswered texts, gaps in the calendar
-              </p>
+            {/* Before: no site, just a directory listing. */}
+            <div className="absolute inset-0 flex flex-col bg-canvas-soft">
+              <div className="flex items-center gap-2 border-b border-canvas-border px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <div className="ml-3 flex flex-1 items-center gap-2 rounded-full border border-canvas-border bg-canvas px-3 py-1.5">
+                  <Search className="h-3 w-3 shrink-0 text-ink-faint" />
+                  <span className="truncate text-xs text-ink-faint">your business, your city</span>
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 text-center">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+                  Before {site.name}
+                </p>
+                <div className="w-full max-w-xs rounded-xl border border-dashed border-canvas-border bg-canvas/60 px-5 py-4 text-left">
+                  <p className="text-sm font-medium text-ink-muted">Your business</p>
+                  <div className="mt-2.5 flex items-center gap-2 text-xs text-ink-faint">
+                    <Phone className="h-3 w-3 shrink-0" />
+                    <span>Phone only, no online booking</span>
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-2 text-xs text-ink-faint">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span>Directory listing, no website</span>
+                  </div>
+                </div>
+                <p className="max-w-xs text-sm text-ink-faint">
+                  Nothing for a prospective customer to find, and no system
+                  behind the scenes to run on.
+                </p>
+              </div>
             </div>
 
+            {/* After: a real, built site. */}
             <div
-              className="absolute inset-0 flex flex-col justify-center bg-canvas-surface px-8 py-8 md:px-12"
-              style={{
-                clipPath: `inset(0 0 0 ${split}%)`,
-                background:
-                  "linear-gradient(135deg, rgba(124,92,255,0.14), rgba(63,232,184,0.1)), rgb(var(--color-canvas-surface))",
-              }}
+              className="absolute inset-0 flex flex-col bg-canvas-surface"
+              style={{ clipPath: `inset(0 0 0 ${split}%)` }}
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-mint">
-                After {site.name}
-              </p>
-              <p className="mt-3 font-display text-3xl font-semibold text-ink md:text-4xl">
-                0 missed
-              </p>
-              <p className="mt-2 text-sm text-ink-faint">
-                calendar full, next job booked for 9am tomorrow
-              </p>
+              <div className="flex items-center gap-2 border-b border-canvas-border px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <span className="h-2.5 w-2.5 rounded-full border border-ink-faint" />
+                <div className="ml-3 flex-1 truncate rounded-full border border-canvas-border bg-canvas px-3 py-1.5 text-xs text-ink-muted">
+                  yourbusiness.com
+                </div>
+              </div>
+              <div className="relative flex-1">
+                {/* Still loading: shown until the divider is dragged open. */}
+                <div
+                  className={`absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center transition-opacity duration-500 ${
+                    siteLoaded ? "pointer-events-none opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <Loader2 className="h-6 w-6 animate-spin text-ink-faint" strokeWidth={1.5} />
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+                    Building your site
+                  </p>
+                  <div className="w-full max-w-[10rem] space-y-2">
+                    <span className="block h-2 w-full animate-pulse rounded-full bg-canvas-border" />
+                    <span className="block h-2 w-2/3 animate-pulse rounded-full bg-canvas-border" />
+                  </div>
+                </div>
+
+                {/* Loaded: the skeleton of a real, built site. */}
+                <div
+                  className={`absolute inset-0 flex flex-col gap-5 px-8 py-7 transition-opacity duration-500 ${
+                    siteLoaded ? "opacity-100" : "pointer-events-none opacity-0"
+                  }`}
+                >
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent-soft">
+                    After {site.name}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="h-5 w-5 rounded-md bg-ink/70" />
+                    <span className="ml-4 h-2 w-8 rounded-full bg-ink/25" />
+                    <span className="h-2 w-8 rounded-full bg-ink/25" />
+                    <span className="h-2 w-8 rounded-full bg-ink/25" />
+                    <span className="ml-auto h-6 w-16 rounded-full bg-accent" />
+                  </div>
+                  <div className="space-y-2.5">
+                    <span className="block h-3.5 w-4/5 rounded-full bg-ink/85" />
+                    <span className="block h-3.5 w-3/5 rounded-full bg-ink/85" />
+                    <span className="block h-2 w-2/5 rounded-full bg-ink-muted/60" />
+                  </div>
+                  <span className="block h-16 w-full rounded-lg border border-canvas-border bg-gradient-to-br from-canvas-border/40 to-transparent" />
+                  <div className="flex gap-3">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="flex-1 space-y-2 rounded-lg border border-canvas-border bg-canvas/60 p-3"
+                      >
+                        <span className="block h-4 w-4 rounded-full bg-ink/40" />
+                        <span className="block h-1.5 w-full rounded-full bg-ink-muted/40" />
+                        <span className="block h-1.5 w-2/3 rounded-full bg-ink-muted/40" />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-auto font-mono text-[11px] uppercase tracking-[0.15em] text-ink-faint">
+                    Website, booking, and AI call handling, live in one system
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div

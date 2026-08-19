@@ -5,22 +5,21 @@ import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
 
 type Row = { cells: string[]; status: "ok" | "pending" };
-type Tab = { label: string; columns: string[]; rows: Row[] };
+export type IntegrationDemoTab = { label: string; columns: string[]; rows: Row[] };
+type Tab = IntegrationDemoTab;
 type LogoGroup = { label: string; tools: string[] };
 
 /**
- * Pain-points list + an interactive tabbed "see it live" data panel +
- * (optionally) a grid of connected tools, grouped by category. Modeled on
- * apideck.com's homepage — lead with the problem in the customer's own
- * words, then show a realistic-looking data view instead of a paragraph
- * describing the feature.
+ * An interactive tabbed "see it live" data panel, optionally followed by a
+ * grid of connected tools grouped by category. The problem framing lives in
+ * the page's own Problem section now, so this is purely the "how it works"
+ * proof: a realistic-looking data view instead of a paragraph describing
+ * the feature.
  */
 export default function IntegrationDemoPanel({
-  painPoints,
   tabs,
   logoGroups,
 }: {
-  painPoints: string[];
   tabs: Tab[];
   logoGroups?: LogoGroup[];
 }) {
@@ -31,20 +30,7 @@ export default function IntegrationDemoPanel({
   return (
     <section className="border-t border-canvas-border py-20 md:py-28">
       <Container>
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-accent-soft">
-          The problem, stated plainly
-        </h2>
-        <div className="mt-8 divide-y divide-canvas-border border-t border-canvas-border">
-          {painPoints.map((point, i) => (
-            <Reveal key={point} delay={i * 0.06}>
-              <p className="py-4 text-balance text-lg text-ink md:text-xl">
-                {point}
-              </p>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-14">
+        <Reveal>
           <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-accent-soft">
             See it live
           </h2>
@@ -108,7 +94,7 @@ export default function IntegrationDemoPanel({
               </tbody>
             </table>
           </div>
-        </div>
+        </Reveal>
 
         {logoGroups && (
           <div className="mt-14">

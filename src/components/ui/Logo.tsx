@@ -1,9 +1,8 @@
 /**
- * The Monorite mark: a rounded-square badge in the brand's signature
- * accent-to-mint gradient with a bold "M" monogram. Built as inline SVG
- * (not a raster image) so it stays crisp at every size it's used at —
- * favicon, navbar, footer, and the full-screen preloader — and can pick up
- * currentColor / theme changes without shipping multiple asset files.
+ * The Monorite mark: a rounded-square badge in a cream-to-cream tonal
+ * gradient with a bold "M" monogram. Built as inline SVG (not a raster
+ * image) so it stays crisp at every size it's used at — favicon, navbar,
+ * footer, and the full-screen preloader.
  */
 export default function Logo({
   size = 36,
@@ -25,8 +24,8 @@ export default function Logo({
     >
       <defs>
         <linearGradient id="monorite-mark" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#7C5CFF" />
-          <stop offset="100%" stopColor="#3FE8B8" />
+          <stop offset="0%" stopColor="#F4F3EE" />
+          <stop offset="100%" stopColor="#D8D0C3" />
         </linearGradient>
       </defs>
       <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#monorite-mark)" />
@@ -39,7 +38,7 @@ export default function Logo({
         fontFamily="var(--font-display), sans-serif"
         fontWeight="700"
         fontSize="20"
-        fill="#08090A"
+        fill="#0B0B0D"
       >
         M
       </text>

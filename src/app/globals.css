@@ -5,18 +5,16 @@
 @layer base {
   /*
    * Color tokens as RGB triplets (no commas — required for Tailwind's
-   * rgba(var(--x), <alpha>) pattern). :root is the default (dark) theme;
-   * [data-theme="light"] overrides it. A tiny blocking script in the
-   * document <head> (see layout.tsx) sets this attribute before first
-   * paint based on saved preference / OS setting, so there is no
-   * flash-of-wrong-theme. Every component that uses bg-canvas, text-ink,
-   * bg-accent, etc. picks up the swap automatically — no dark:/light:
-   * variants needed anywhere else in the codebase.
+   * rgba(var(--x), <alpha>) pattern). Dark, monochrome cream-on-near-black
+   * is the site's only theme — no light variant, no toggle. Every
+   * component that uses bg-canvas, text-ink, bg-accent, etc. picks up
+   * these values with no dark:/light: variants needed anywhere else in
+   * the codebase.
    */
   :root {
-    --color-canvas: 8 9 10;
-    --color-canvas-soft: 14 15 17;
-    --color-canvas-surface: 20 21 24;
+    --color-canvas: 11 11 13;
+    --color-canvas-soft: 17 17 19;
+    --color-canvas-surface: 23 23 26;
     --color-canvas-border: 255 255 255;
     /* Pre-composited hairline: Tailwind always invokes function-based
        colors with opacityValue "1" when a utility is used without an
@@ -24,45 +22,29 @@
        border/8), so a fallback alpha inside the color function is never
        reachable for the unmodified class. Baking the alpha directly into
        its own variable sidesteps that entirely. */
-    --border-hairline: rgba(255, 255, 255, 0.08);
+    --border-hairline: rgba(255, 255, 255, 0.1);
 
-    --color-ink: 245 244 240;
-    --color-ink-muted: 166 166 172;
-    --color-ink-faint: 110 110 118;
+    --color-ink: 244 243 238;
+    --color-ink-muted: 168 164 156;
+    --color-ink-faint: 110 106 99;
 
-    --color-accent: 124 92 255;
-    --color-accent-soft: 169 150 255;
-    --color-accent-dim: 75 59 153;
+    /* Monochrome by design — no separate accent hue. "Accent" is simply
+       the cream ink color used as a solid fill (primary buttons render as
+       filled cream with near-black text), matching the reference site's
+       actual palette: cream, near-black, and nothing else. */
+    --color-accent: 244 243 238;
+    --color-accent-soft: 216 208 195;
+    --color-accent-dim: 42 42 44;
 
-    --color-mint: 63 232 184;
-    --color-mint-soft: 143 243 214;
-  }
-
-  [data-theme="light"] {
-    --color-canvas: 250 249 246;
-    --color-canvas-soft: 243 242 238;
-    --color-canvas-surface: 255 255 255;
-    --color-canvas-border: 10 10 12;
-    --border-hairline: rgba(10, 10, 12, 0.08);
-
-    --color-ink: 17 17 19;
-    --color-ink-muted: 90 90 98;
-    --color-ink-faint: 138 138 145;
-
-    --color-accent: 108 74 235;
-    --color-accent-soft: 88 54 217;
-    --color-accent-dim: 224 216 255;
-
-    --color-mint: 16 150 120;
-    --color-mint-soft: 44 184 148;
+    /* Retired as a distinct hue — aliased to the same cream family so
+       "success/live" indicators stay monochrome instead of introducing a
+       second color into an otherwise single-accent palette. */
+    --color-mint: 244 243 238;
+    --color-mint-soft: 216 208 195;
   }
 
   ::selection {
     @apply bg-accent/30 text-ink;
-  }
-
-  html {
-    scroll-behavior: smooth;
   }
 
   body {
