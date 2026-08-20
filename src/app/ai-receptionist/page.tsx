@@ -8,6 +8,8 @@ import Button from "@/components/ui/Button";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import CTASection from "@/components/sections/CTASection";
+import { callSample } from "@/data/callSample";
+import { cn } from "@/lib/utils";
 
 export const metadata = buildMetadata({
   title: "AI Phone Receptionist",
@@ -99,22 +101,19 @@ export default function AIReceptionistPage() {
                   </div>
                 </div>
 
-                <p className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-ink px-4 py-3 text-sm text-canvas">
-                  Thanks for calling, this is Mike on the after-hours line,
-                  this call may be recorded. Go ahead and tell me what's
-                  going on.
-                </p>
-                <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-canvas-soft px-4 py-3 text-sm text-ink-muted">
-                  Hi, is this the plumber? My kitchen's flooding, a pipe's
-                  burst under the sink.
-                </p>
-                <p className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-ink px-4 py-3 text-sm text-canvas">
-                  Sorry to hear that. Is anyone in danger, or is it just the
-                  water?
-                </p>
-                <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-canvas-soft px-4 py-3 text-sm text-ink-muted">
-                  Just water, but it's a lot of it.
-                </p>
+                {callSample.map((line, i) => (
+                  <p
+                    key={i}
+                    className={cn(
+                      "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
+                      line.speaker === "agent"
+                        ? "ml-auto rounded-tr-sm bg-ink text-canvas"
+                        : "rounded-tl-sm bg-canvas-soft text-ink-muted",
+                    )}
+                  >
+                    {line.text}
+                  </p>
+                ))}
 
                 <div className="mt-2 flex flex-wrap gap-2">
                   <span className="rounded-full border border-canvas-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted">

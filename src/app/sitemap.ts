@@ -9,11 +9,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // redirect to anchor sections on "/" (see next.config.mjs), so listing
   // them here would submit redirecting URLs to search engines instead of
   // the canonical single-page home.
-  const staticRoutes = ["", "/blog", "/contact"].map((path) => ({
+  const staticRoutes = ["", "/blog", "/contact", "/ai-receptionist", "/privacy"].map((path) => ({
     url: `${site.url}${path}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
-    priority: path === "" ? 1 : 0.8,
+    priority: path === "" ? 1 : path === "/privacy" ? 0.3 : 0.8,
   }));
 
   const serviceRoutes = services.map((s) => ({

@@ -11,6 +11,12 @@ import {
 } from "@/server/chat";
 
 export const runtime = "nodejs";
+// Vercel's default serverless function limit (10s on Hobby) is shorter than
+// this route's own internal REPLY_TIMEOUT_MS (15s in orchestrator.ts) — left
+// unset, Vercel would kill a slow request and return an HTML error page
+// before our own timeout logic ever gets to respond gracefully. This
+// matches the platform limit to the app's own limit instead of fighting it.
+export const maxDuration = 20;
 
 const CHAT_MAX_REQUESTS_PER_MINUTE = 20;
 

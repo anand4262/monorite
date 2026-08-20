@@ -7,16 +7,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-
-const transcript = [
-  {
-    speaker: "agent",
-    text: "Thanks for calling, this is Mike on the after hours line, this call may be recorded. Go ahead and tell me what's going on.",
-  },
-  { speaker: "caller", text: "Hi, is this the plumber? My kitchen's flooding, a pipe's burst under the sink." },
-  { speaker: "agent", text: "Sorry to hear that. Is anyone in danger, or is it just the water?" },
-  { speaker: "caller", text: "Just water, but it's a lot of it." },
-];
+import { callSample } from "@/data/callSample";
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -99,7 +90,7 @@ export default function VoiceAgentSample() {
 
         <Reveal delay={0.2} className="mt-6">
           <div className="flex flex-col gap-2.5 rounded-2xl border border-canvas-border bg-canvas-surface/40 p-6">
-            {transcript.map((line, i) => (
+            {callSample.map((line, i) => (
               <p
                 key={i}
                 className={cn(
