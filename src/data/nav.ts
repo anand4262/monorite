@@ -1,9 +1,13 @@
 import type { NavItem } from "@/types";
 
+// Order matches the actual section order on the homepage (see page.tsx):
+// Services -> Work -> Studio -> Founders. Blog/Contact are separate pages,
+// not anchors, so they stay last regardless.
 export const mainNav: NavItem[] = [
-  { label: "Studio", href: "/#studio" },
   { label: "Services", href: "/#services" },
   { label: "Work", href: "/#work" },
+  { label: "Studio", href: "/#studio" },
+  { label: "Founders", href: "/#founders" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
@@ -12,8 +16,9 @@ export const footerNav: { title: string; links: NavItem[] }[] = [
   {
     title: "Company",
     links: [
-      { label: "Studio", href: "/#studio" },
       { label: "Work", href: "/#work" },
+      { label: "Studio", href: "/#studio" },
+      { label: "Founders", href: "/#founders" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
     ],

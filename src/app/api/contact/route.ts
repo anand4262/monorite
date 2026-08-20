@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { contactFormSchema } from "@/lib/validations";
 import { isRateLimited } from "@/lib/rate-limit";
+import { isSameOrigin } from "@/lib/security";
 import { site } from "@/data/site";
 
 export const runtime = "nodejs";
@@ -23,10 +24,7 @@ export const runtime = "nodejs";
  * RESEND_API_KEY in .env.local and completing the `sendEmail` function.
  */
 export async function POST(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-
-  if (origin && host && !origin.includes(host)) {
+  if (!isSameOrigin(request)) {
     return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
   }
 

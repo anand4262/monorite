@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 /**
  * A fixed, one-at-a-time swipeable carousel for mobile — built on Embla
@@ -9,17 +10,30 @@ import useEmblaCarousel from "embla-carousel-react";
  * accessibility come from a maintained package instead of custom gesture
  * code. Each slide takes the full width (no peeking neighbor), with dots
  * below showing position.
+ *
+ * autoplayDelay is opt-in (existing callers pass nothing and stay purely
+ * manual). stopOnInteraction is deliberately false: a visitor dragging a
+ * slide should still get autoplay back afterward rather than silently
+ * killing it forever the moment they touch the carousel once.
  */
 export default function SwipeCarousel<T>({
   items,
   keyFor,
   renderItem,
+  autoplayDelay,
 }: {
   items: T[];
   keyFor: (item: T) => string;
   renderItem: (item: T) => ReactNode;
+  autoplayDelay?: number;
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: "start" });
+  const autoplay = useRef(
+    autoplayDelay ? Autoplay({ delay: autoplayDelay, stopOnInteraction: false }) : undefined,
+  );
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: Boolean(autoplayDelay), align: "start" },
+    autoplay.current ? [autoplay.current] : [],
+  );
   const [selected, setSelected] = useState(0);
 
   useEffect(() => {
@@ -31,6 +45,16 @@ export default function SwipeCarousel<T>({
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi]);
+
+  // Autoplay is a motion effect — stop it outright for visitors who've
+  // asked the OS for reduced motion, rather than just running it slower.
+  // Manual swipe still works either way, this only kills the automatic part.
+  useEffect(() => {
+    if (!autoplay.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      autoplay.current.stop();
+    }
+  }, []);
 
   return (
     <div>

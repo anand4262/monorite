@@ -99,14 +99,18 @@ export default function AIReceptionistPage() {
                   </div>
                 </div>
 
+                <p className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-ink px-4 py-3 text-sm text-canvas">
+                  Thanks for calling, this is Mike on the after-hours line,
+                  this call may be recorded. Go ahead and tell me what's
+                  going on.
+                </p>
                 <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-canvas-soft px-4 py-3 text-sm text-ink-muted">
                   Hi, is this the plumber? My kitchen's flooding, a pipe's
                   burst under the sink.
                 </p>
                 <p className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-ink px-4 py-3 text-sm text-canvas">
-                  Sorry to hear that, you're through to our after-hours
-                  line, this call may be recorded. Is anyone in danger, or
-                  is it just the water?
+                  Sorry to hear that. Is anyone in danger, or is it just the
+                  water?
                 </p>
                 <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-canvas-soft px-4 py-3 text-sm text-ink-muted">
                   Just water, but it's a lot of it.

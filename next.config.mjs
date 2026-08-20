@@ -46,8 +46,16 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
+    // microphone=(self): the chat widget's voice input needs mic access
+    // for the page's own origin. Was microphone=() (blocked entirely) from
+    // before that feature existed — that setting silently denied every
+    // getUserMedia call the Web Speech API made, with no error surfaced
+    // to the page, before the browser even reached a permission prompt.
+    // "self" keeps third-party iframes embedded on the page from getting
+    // mic access (there are none today, but the site has no reason to
+    // allow it), while still letting the page itself use it.
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+    value: "camera=(), microphone=(self), geolocation=(), interest-cohort=()",
   },
   {
     key: "Strict-Transport-Security",
@@ -61,6 +69,17 @@ const nextConfig = {
   compress: true,
   images: {
     formats: ["image/avif", "image/webp"],
+  },
+  // pdf-parse (used by the chat service's PDF-upload intake) pulls in
+  // pdfjs-dist, which has browser-oriented module code that breaks when
+  // webpack bundles it into the RSC/route-handler build ("Object.
+  // defineProperty called on non-object" at import time — crashes every
+  // request to the route, not just ones with a PDF attached). Marking it
+  // external makes Next use Node's native require for this package
+  // instead of bundling it, which is the documented fix for this class
+  // of PDF/canvas-library incompatibility in the App Router.
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"],
   },
   async headers() {
     return [

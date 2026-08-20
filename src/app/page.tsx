@@ -6,6 +6,8 @@ import Container from "@/components/ui/Container";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
 import Hero from "@/components/sections/Hero";
+import ChatDemoSection from "@/components/sections/ChatDemoSection";
+import VoiceAgentSample from "@/components/sections/VoiceAgentSample";
 import TrustBar from "@/components/sections/TrustBar";
 import ComparisonSlider from "@/components/sections/ComparisonSlider";
 import BigStatement from "@/components/sections/BigStatement";
@@ -14,6 +16,7 @@ import StatsBand from "@/components/sections/StatsBand";
 import ProcessSteps from "@/components/sections/ProcessSteps";
 import WorkCarousel from "@/components/sections/WorkCarousel";
 import Studio from "@/components/sections/Studio";
+import Founders from "@/components/sections/Founders";
 import Testimonials from "@/components/sections/Testimonials";
 import CTASection from "@/components/sections/CTASection";
 
@@ -27,6 +30,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <ChatDemoSection />
+      <VoiceAgentSample />
       <TrustBar />
       <ComparisonSlider />
       <BigStatement />
@@ -67,6 +72,7 @@ export default function HomePage() {
       <WorkCarousel projects={projects} />
 
       <Studio />
+      <Founders />
       <Testimonials />
       <CTASection />
     </>

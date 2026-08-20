@@ -7,6 +7,8 @@ import { ReactLenis } from "lenis/react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/ui/Preloader";
+import { ChatProvider } from "@/components/chat/ChatProvider";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -39,9 +41,27 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+// Sets the theme attribute on <html> before first paint, so the page
+// never flashes the wrong theme while React hydrates. Must run as a
+// blocking inline script (not next/script, which defers) — reading
+// localStorage after paint is what causes the flash in the first place.
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem("theme");
+    document.documentElement.dataset.theme = stored === "light" ? "light" : "dark";
+  } catch (e) {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="flex min-h-screen flex-col bg-canvas">
         <script
           type="application/ld+json"
@@ -57,11 +77,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <Navbar />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <ChatProvider>
+          <Navbar />
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <ChatWidget />
+        </ChatProvider>
       </body>
     </html>
   );

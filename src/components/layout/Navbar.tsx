@@ -10,6 +10,7 @@ import { mainNav } from "@/data/nav";
 import { cn } from "@/lib/utils";
 import Logo from "../ui/Logo";
 import Button from "../ui/Button";
+import ThemeToggle from "../ui/ThemeToggle";
 
 /**
  * A floating "dock" nav instead of a full-bleed bar — detached from the
@@ -95,12 +96,14 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           <Button href="/contact" size="sm">
             Start a project
           </Button>
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

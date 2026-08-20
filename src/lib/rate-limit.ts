@@ -9,11 +9,11 @@
  */
 
 const WINDOW_MS = 60_000; // 1 minute
-const MAX_REQUESTS = 5;
+const DEFAULT_MAX_REQUESTS = 5;
 
 const hits = new Map<string, { count: number; windowStart: number }>();
 
-export function isRateLimited(key: string): boolean {
+export function isRateLimited(key: string, maxRequests = DEFAULT_MAX_REQUESTS): boolean {
   const now = Date.now();
   const entry = hits.get(key);
 
@@ -23,7 +23,7 @@ export function isRateLimited(key: string): boolean {
   }
 
   entry.count += 1;
-  if (entry.count > MAX_REQUESTS) {
+  if (entry.count > maxRequests) {
     return true;
   }
 

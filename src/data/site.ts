@@ -43,6 +43,39 @@ export const site = {
     country: "AU",
   },
   location: "17A Augusta Crescent, Sunshine North VIC 3020",
+  /** What the team actually builds with — surfaced to the chat assistant's
+   * knowledge base so it can answer capability questions ("do you build
+   * mobile apps?") without guessing. Not the specific LLM/vendor stack
+   * behind the chat assistant itself; see the persona's confidentiality
+   * rules for that distinction. */
+  technologies: [
+    "HTML",
+    "CSS",
+    "Tailwind CSS",
+    "JavaScript",
+    "jQuery",
+    "AJAX",
+    "React",
+    "Next.js",
+    "React Native",
+    "Bootstrap",
+    "Node.js",
+    "Express",
+    "PHP",
+    "Laravel",
+    "Java (Enterprise APIs, Spring Boot, Hibernate)",
+    "Postman",
+    "PostgreSQL",
+    "MySQL",
+    "MongoDB",
+    "WordPress",
+    "Strapi",
+    "RAG / AI-LLM integration",
+    "Git & GitHub",
+    "AWS",
+    "CI/CD",
+    "SEO",
+  ],
   social: {
     linkedin: "https://linkedin.com/company/monorite",
     twitter: "https://x.com/monorite",

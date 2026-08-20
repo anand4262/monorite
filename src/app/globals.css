@@ -5,11 +5,11 @@
 @layer base {
   /*
    * Color tokens as RGB triplets (no commas — required for Tailwind's
-   * rgba(var(--x), <alpha>) pattern). Dark, monochrome cream-on-near-black
-   * is the site's only theme — no light variant, no toggle. Every
-   * component that uses bg-canvas, text-ink, bg-accent, etc. picks up
-   * these values with no dark:/light: variants needed anywhere else in
-   * the codebase.
+   * rgb(var(--x) / <alpha>) pattern, see tailwind.config.ts). Dark is the
+   * default/primary theme; [data-theme="light"] below overrides the same
+   * variable names with an inverted palette. Every component that uses
+   * bg-canvas, text-ink, bg-accent, etc. picks up whichever theme is active
+   * with no dark:/light: variants needed anywhere else in the codebase.
    */
   :root {
     --color-canvas: 11 11 13;
@@ -41,6 +41,29 @@
        second color into an otherwise single-accent palette. */
     --color-mint: 244 243 238;
     --color-mint-soft: 216 208 195;
+  }
+
+  /* Light theme — the same monochrome relationship inverted (near-black ink
+     on a warm parchment canvas) rather than a second hue family, so the
+     "monochrome by design" identity holds in both themes. Set via
+     ThemeToggle, which stamps this attribute on <html>. */
+  [data-theme="light"] {
+    --color-canvas: 247 246 242;
+    --color-canvas-soft: 240 238 232;
+    --color-canvas-surface: 232 229 220;
+    --color-canvas-border: 0 0 0;
+    --border-hairline: rgba(0, 0, 0, 0.1);
+
+    --color-ink: 24 23 20;
+    --color-ink-muted: 96 92 84;
+    --color-ink-faint: 150 145 135;
+
+    --color-accent: 24 23 20;
+    --color-accent-soft: 70 66 58;
+    --color-accent-dim: 225 222 213;
+
+    --color-mint: 24 23 20;
+    --color-mint-soft: 70 66 58;
   }
 
   ::selection {
