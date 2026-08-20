@@ -2,13 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isRateLimited } from "@/lib/rate-limit";
 import { isSameOrigin } from "@/lib/security";
-import {
-  generateReply,
-  extractPdfText,
-  DocumentTooLargeError,
-  DocumentParseError,
-  chatConfig,
-} from "@/server/chat";
+import { generateReply, chatConfig } from "@/server/chat";
 
 export const runtime = "nodejs";
 // Vercel's default serverless function limit (10s on Hobby) is shorter than
@@ -70,8 +64,18 @@ export async function POST(request: NextRequest) {
   let rawMessages: unknown;
   let attachedDocumentText: string | undefined;
 
+  // pdf-parse pulls in pdfjs-dist, a large and historically fragile
+  // dependency (it's already broken this route once in production via a
+  // missing @napi-rs/canvas peer dependency). Importing it dynamically,
+  // only on the branch that actually handles a file, means a plain text
+  // message — the overwhelming majority of traffic — can never be taken
+  // down by that module failing to load, now or if it breaks again later.
+  const pdf = contentType.includes("multipart/form-data")
+    ? await import("@/server/chat/knowledge/document-extractor")
+    : null;
+
   try {
-    if (contentType.includes("multipart/form-data")) {
+    if (contentType.includes("multipart/form-data") && pdf) {
       const form = await request.formData();
       sessionId = String(form.get("sessionId") ?? "");
       chatOrigin = String(form.get("origin") ?? "");
@@ -83,7 +87,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Only PDF attachments are supported." }, { status: 400 });
         }
         const buffer = Buffer.from(await file.arrayBuffer());
-        const extracted = await extractPdfText(buffer);
+        const extracted = await pdf.extractPdfText(buffer);
         attachedDocumentText = extracted.text;
       }
     } else {
@@ -93,10 +97,10 @@ export async function POST(request: NextRequest) {
       rawMessages = json.messages;
     }
   } catch (error) {
-    if (error instanceof DocumentTooLargeError) {
+    if (pdf && error instanceof pdf.DocumentTooLargeError) {
       return NextResponse.json({ error: "That PDF is too large (max 8MB)." }, { status: 413 });
     }
-    if (error instanceof DocumentParseError) {
+    if (pdf && error instanceof pdf.DocumentParseError) {
       return NextResponse.json({ error: "Couldn't read that PDF — is it a valid file?" }, { status: 422 });
     }
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });

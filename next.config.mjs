@@ -79,7 +79,7 @@ const nextConfig = {
   // instead of bundling it, which is the documented fix for this class
   // of PDF/canvas-library incompatibility in the App Router.
   experimental: {
-    serverComponentsExternalPackages: ["pdf-parse"],
+    serverComponentsExternalPackages: ["pdf-parse", "@napi-rs/canvas"],
   },
   async headers() {
     return [
