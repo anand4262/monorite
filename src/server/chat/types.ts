@@ -68,4 +68,15 @@ export interface GenerateReplyInput {
 export interface GenerateReplyResult {
   reply: string;
   blocked: boolean;
+  /** True when this turn's user message contained a name, email, or phone
+   * number the local extractor could find — a fast synchronous check, not
+   * a guarantee the full async lead (extractLead in intake.ts) was saved.
+   * Good enough for client-side "fire a generate_lead analytics event"
+   * purposes without adding latency to the reply. */
+  leadCaptured: boolean;
+  /** Same threshold as shouldExtractLead (intake.ts) — once a conversation
+   * is substantial enough to be worth summarizing into a lead, it's also
+   * substantial enough to offer a real "book a project" CTA in the UI,
+   * rather than showing one from the very first message. */
+  showCta: boolean;
 }

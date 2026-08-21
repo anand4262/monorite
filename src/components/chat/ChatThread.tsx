@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, Mic, Paperclip, X } from "lucide-react";
+import { ArrowUp, ArrowUpRight, Mic, Paperclip, X } from "lucide-react";
 import { useChat, type ChatOrigin } from "./ChatProvider";
 import { useSpeechToText } from "./useSpeechToText";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const SUGGESTIONS = ["What services do you offer?", "Can you build me a website?", "Tell me about a project you've shipped"];
 const MAX_PDF_BYTES = 8 * 1024 * 1024;
@@ -14,7 +15,7 @@ const MAX_PDF_BYTES = 8 * 1024 * 1024;
 const MAX_MESSAGE_LENGTH = 2000;
 
 export default function ChatThread({ compact = false, source }: { compact?: boolean; source: ChatOrigin }) {
-  const { messages, isLoading, error, sendMessage } = useChat();
+  const { messages, isLoading, error, sendMessage, showCta } = useChat();
   const [draft, setDraft] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -115,6 +116,19 @@ export default function ChatThread({ compact = false, source }: { compact?: bool
       </div>
 
       <div className="border-t border-canvas-border p-3">
+        {showCta && (
+          <a
+            href="/contact"
+            onClick={() => trackEvent("chat_cta_clicked", { cta: "book_a_project", location: source })}
+            className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-canvas-border bg-canvas-surface/60 px-4 py-2.5 text-sm text-ink-muted transition-colors duration-300 hover:border-accent/40 hover:text-ink"
+          >
+            <span>Ready to build this?</span>
+            <span className="flex shrink-0 items-center gap-1 font-medium text-ink">
+              Book a project
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </span>
+          </a>
+        )}
         <p className="mb-2 px-1 text-[10.5px] leading-relaxed text-ink-faint">
           By chatting, you agree to our{" "}
           <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline decoration-canvas-border underline-offset-2 hover:text-ink-muted">

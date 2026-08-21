@@ -119,5 +119,5 @@ export async function POST(request: NextRequest) {
     attachedDocumentText,
   });
 
-  return NextResponse.json({ reply: result.reply });
+  return NextResponse.json({ reply: result.reply, leadCaptured: result.leadCaptured, showCta: result.showCta });
 }

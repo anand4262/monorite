@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, MessageCircle, X } from "lucide-react";
 import { useChat } from "./ChatProvider";
 import ChatThread from "./ChatThread";
+import { trackEvent } from "@/lib/analytics";
 
 /** Site-wide floating chat, mounted once in the root layout. Shares its
  * conversation with the homepage's embedded demo panel via ChatProvider —
@@ -77,7 +78,10 @@ export default function ChatWidget() {
 
       <motion.button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen) trackEvent("chat_opened", { location: "widget" });
+          setIsOpen(!isOpen);
+        }}
         whileTap={{ scale: 0.94 }}
         animate={!isOpen && hasUnreadReply ? { scale: [1, 1.05, 1] } : { scale: 1 }}
         transition={!isOpen && hasUnreadReply ? { duration: 1.6, repeat: Infinity, ease: "easeInOut" } : undefined}

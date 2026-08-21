@@ -24,13 +24,19 @@
 // use eval-based HMR, so 'unsafe-eval' is left out of the deployed CSP.
 const isDev = process.env.NODE_ENV === "development";
 
+// Google Analytics (gtag.js, loaded via @next/third-parties in layout.tsx)
+// needs two separate allowances: the script itself loads from
+// googletagmanager.com, and every tracked event is then a separate
+// network call out to google-analytics.com — without both, the browser
+// silently blocks it and analytics never fires, with no visible error
+// beyond a CSP violation in the console.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
+  script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${isDev ? " 'unsafe-eval'" : ""};
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://play-lh.googleusercontent.com https://vistalegalfirm.com https://www.vistalegalfirm.com https://kebab-knights.vercel.app https://images.unsplash.com;
   font-src 'self' data:;
-  connect-src 'self';
+  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com;
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';

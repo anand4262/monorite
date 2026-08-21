@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -43,6 +44,10 @@ export default function ContactForm() {
         return;
       }
 
+      // GA4's own recommended event for this ("generate_lead"), not an
+      // invented name — keeps it recognizable in standard GA4 reports
+      // and reportable as a Key Event without extra config.
+      trackEvent("generate_lead", { source: "contact_form" });
       setStatus("success");
       form.reset();
     } catch {

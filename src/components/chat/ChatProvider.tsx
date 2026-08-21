@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 export type ChatMessage = {
   id: string;
@@ -43,6 +44,11 @@ interface ChatContextValue {
    * start over. See resolveContinuePrompt. */
   pendingContinuePrompt: boolean;
   resolveContinuePrompt: (choice: "continue" | "fresh") => void;
+  /** Once the conversation is substantial enough that the server would
+   * bother summarizing it into a lead, it's also substantial enough to
+   * offer a real "book a project" CTA — sticky once earned, so it doesn't
+   * flicker away if a later message happens not to cross the threshold. */
+  showCta: boolean;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
@@ -61,6 +67,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [hasUnreadReply, setHasUnreadReply] = useState(false);
   const [pendingContinuePrompt, setPendingContinuePrompt] = useState(false);
+  const [showCta, setShowCta] = useState(false);
   // Set once resolved (either choice), so the prompt never asks twice in
   // the same browser session even across page reloads.
   const promptResolvedRef = useRef(false);
@@ -149,11 +156,21 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       }
 
       clearIdleNudgeTimer();
+      // messagesRef starts as [GREETING] — length 1 means this is the
+      // first real user message of the conversation, not a repeat sender.
+      const isFirstMessage = messagesRef.current.length === 1;
       const label = file ? `${trimmed}\n📎 ${file.name}` : trimmed;
       const userMessage: ChatMessage = { id: crypto.randomUUID(), role: "user", content: label };
       const next = [...messagesRef.current, userMessage];
       messagesRef.current = next;
       setMessages(next);
+
+      if (isFirstMessage) trackEvent("chat_started", { location: source });
+      trackEvent("chat_message_sent", {
+        message_number: next.filter((m) => m.role === "user").length,
+        location: source,
+      });
+
       void requestReply(
         sessionId,
         originRef.current,
@@ -167,6 +184,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         isOpenRef,
         setHasUnreadReply,
         armIdleNudge,
+        setShowCta,
       );
     },
     [sessionId, armIdleNudge, clearIdleNudgeTimer],
@@ -197,6 +215,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       clearIdleNudgeTimer();
       setHasUnreadReply(false);
       setError(null);
+      setShowCta(false);
     }
   }, [clearIdleNudgeTimer]);
 
@@ -211,8 +230,19 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       hasUnreadReply,
       pendingContinuePrompt,
       resolveContinuePrompt,
+      showCta,
     }),
-    [messages, isLoading, error, sendMessage, isOpen, hasUnreadReply, pendingContinuePrompt, resolveContinuePrompt],
+    [
+      messages,
+      isLoading,
+      error,
+      sendMessage,
+      isOpen,
+      hasUnreadReply,
+      pendingContinuePrompt,
+      resolveContinuePrompt,
+      showCta,
+    ],
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
@@ -231,9 +261,11 @@ async function requestReply(
   isOpenRef: React.MutableRefObject<boolean>,
   setHasUnreadReply: React.Dispatch<React.SetStateAction<boolean>>,
   armIdleNudge: () => void,
+  setShowCta: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
   setIsLoading(true);
   setError(null);
+  const startedAt = Date.now();
 
   // The model only ever sees the plain message text — the "📎 filename"
   // suffix is a UI affordance, not part of the conversation sent upstream.
@@ -262,9 +294,29 @@ async function requestReply(
     const data = await res.json();
 
     if (!res.ok) {
+      // Categories map to the actual status codes /api/chat can return
+      // (see route.ts) — not invented buckets, so this stays meaningful
+      // if a new failure mode is added later without updating this list.
+      const errorType =
+        res.status === 429
+          ? "rate_limit"
+          : res.status === 403
+            ? "origin_blocked"
+            : res.status === 413
+              ? "file_too_large"
+              : res.status === 422
+                ? "file_parse_error"
+                : res.status === 400
+                  ? "invalid_request"
+                  : "api_error";
+      trackEvent("chat_error", { error_type: errorType, location: origin });
       setError(data.error ?? "Something went wrong. Please try again.");
       return;
     }
+
+    trackEvent("chat_response_received", { response_time_ms: Date.now() - startedAt, location: origin });
+    if (data.leadCaptured) trackEvent("generate_lead", { source: "chatbot" });
+    if (data.showCta) setShowCta(true);
 
     const assistantMessage: ChatMessage = { id: crypto.randomUUID(), role: "assistant", content: data.reply };
     messagesRef.current = [...messagesRef.current, assistantMessage];
@@ -279,6 +331,7 @@ async function requestReply(
       armIdleNudge();
     }
   } catch {
+    trackEvent("chat_error", { error_type: "network_error", location: origin });
     setError("Couldn't reach the assistant. Check your connection and try again.");
   } finally {
     setIsLoading(false);

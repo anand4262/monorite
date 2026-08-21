@@ -8,6 +8,7 @@ import { checkModeration } from "./guardrails/moderation";
 import { complete, isConfigured } from "./llm/provider";
 import { conversationStore } from "./store";
 import { shouldExtractLead, extractLead } from "./intake";
+import { extractContactDetailsLocally } from "./local-contact-extractor";
 import type { GenerateReplyInput, GenerateReplyResult } from "./types";
 
 // A hard ceiling on the moderation+completion step, independent of
@@ -52,20 +53,22 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 export async function generateReply(input: GenerateReplyInput): Promise<GenerateReplyResult> {
   const latestUserMessage = input.messages.at(-1);
   if (!latestUserMessage || latestUserMessage.role !== "user") {
-    return { reply: "Something went wrong on my end. Try sending that again.", blocked: true };
+    return { reply: "Something went wrong on my end. Try sending that again.", blocked: true, leadCaptured: false, showCta: false };
   }
 
   // 1. Guardrail the input with cheap synchronous checks (prompt-injection
   //    patterns) before spending anything on a network call.
   const inputCheck = checkInput(latestUserMessage.content);
   if (!inputCheck.allowed) {
-    return { reply: inputCheck.reason ?? "I can't help with that.", blocked: true };
+    return { reply: inputCheck.reason ?? "I can't help with that.", blocked: true, leadCaptured: false, showCta: false };
   }
 
   if (!isConfigured()) {
     return {
       reply: "Chat isn't configured yet. Set OPENAI_API_KEY to enable it. You can also reach us directly at /contact.",
       blocked: true,
+      leadCaptured: false,
+      showCta: false,
     };
   }
 
@@ -113,7 +116,7 @@ export async function generateReply(input: GenerateReplyInput): Promise<Generate
     );
 
     if (!moderation.allowed) {
-      return { reply: moderation.reason ?? "I can't help with that.", blocked: true };
+      return { reply: moderation.reason ?? "I can't help with that.", blocked: true, leadCaptured: false, showCta: false };
     }
 
     reply = checkOutput(raw ?? "");
@@ -122,6 +125,8 @@ export async function generateReply(input: GenerateReplyInput): Promise<Generate
     return {
       reply: "I'm having a brief connection issue. You can keep typing, or reach us directly at /contact.",
       blocked: true,
+      leadCaptured: false,
+      showCta: false,
     };
   }
 
@@ -136,7 +141,9 @@ export async function generateReply(input: GenerateReplyInput): Promise<Generate
 
   void conversationStore.appendTurn(input.sessionId, input.ip, input.origin, latestUserMessage, assistantMessage);
 
-  if (shouldExtractLead(input.messages, Boolean(input.attachedDocumentText))) {
+  const conversationIsSubstantial = shouldExtractLead(input.messages, Boolean(input.attachedDocumentText));
+
+  if (conversationIsSubstantial) {
     void extractLead(
       input.sessionId,
       input.origin,
@@ -147,5 +154,12 @@ export async function generateReply(input: GenerateReplyInput): Promise<Generate
     });
   }
 
-  return { reply, blocked: false };
+  // Synchronous, local, no network — safe to check on the critical path
+  // without the latency cost of waiting on the async extractLead call
+  // above. Only checks this turn's message, not the whole history, so it
+  // reads as "contact details just given," not "ever given in this chat."
+  const contact = extractContactDetailsLocally([latestUserMessage]);
+  const leadCaptured = Boolean(contact.name || contact.email || contact.phone);
+
+  return { reply, blocked: false, leadCaptured, showCta: conversationIsSubstantial };
 }

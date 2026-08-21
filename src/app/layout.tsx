@@ -4,6 +4,7 @@ import "./globals.css";
 import { site } from "@/data/site";
 import { buildMetadata, buildOrganizationJsonLd } from "@/lib/seo";
 import { ReactLenis } from "lenis/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Preloader from "@/components/ui/Preloader";
@@ -85,6 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <ChatWidget />
         </ChatProvider>
+        {/* Only in production — running `next dev` shouldn't send test
+         * traffic into real analytics data. */}
+        {process.env.NODE_ENV === "production" && (
+          <GoogleAnalytics gaId={site.googleAnalyticsId} />
+        )}
       </body>
     </html>
   );

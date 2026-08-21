@@ -10,7 +10,7 @@ export const metadata = buildMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "19 August 2026";
+const LAST_UPDATED = "21 August 2026";
 
 const sections: { title: string; body: React.ReactNode }[] = [
   {
@@ -52,7 +52,46 @@ const sections: { title: string; body: React.ReactNode }[] = [
           limiting, not stored against your identity beyond that), browser type, and basic usage data standard to
           any web request.
         </li>
+        <li>
+          <strong className="text-ink">Analytics</strong> — general usage data (pages visited, how you got here,
+          device/browser type) collected through Google Analytics, via cookies. See &ldquo;Analytics&rdquo; below
+          for details.
+        </li>
       </ul>
+    ),
+  },
+  {
+    title: "Analytics",
+    body: (
+      <>
+        <p>
+          We use Google Analytics to understand how visitors use this site, in aggregate — which pages get visited,
+          roughly how people find us, and general device/browser trends. It works through cookies set in your
+          browser and is separate from the chat assistant and contact form described elsewhere in this policy: it
+          doesn&rsquo;t know who you are, and we don&rsquo;t connect it to your name, email, or chat conversations.
+        </p>
+        <p className="mt-3">
+          Google processes this data under its own terms as an independent data controller — see{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-canvas-border underline-offset-2 hover:text-ink"
+          >
+            Google&rsquo;s Privacy Policy
+          </a>
+          . You can opt out of Google Analytics tracking across all sites using the{" "}
+          <a
+            href="https://tools.google.com/dlpage/gaoptout"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-canvas-border underline-offset-2 hover:text-ink"
+          >
+            Google Analytics Opt-out Browser Add-on
+          </a>
+          , or block analytics cookies directly in your browser&rsquo;s privacy settings.
+        </p>
+      </>
     ),
   },
   {

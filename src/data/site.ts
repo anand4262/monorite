@@ -82,6 +82,11 @@ export const site = {
     instagram: "https://instagram.com/monorite",
   },
   founded: 2023,
+  /** Not a secret — GA measurement IDs are public (they're visible in every
+   * page's client-side JS by design), so this is fine to keep here rather
+   * than an env var. Null-checked at the call site so local dev without
+   * this set doesn't send test traffic into real analytics. */
+  googleAnalyticsId: "G-H006Z4QP7B",
 };
 
 export type Site = typeof site;

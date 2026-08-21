@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { site } from "@/data/site";
 import Logo from "./Logo";
+
+// useLayoutEffect does nothing during SSR (and warns if called there) —
+// this falls back to useEffect on the server and only becomes the real,
+// synchronous-before-paint version once running in a browser.
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * A brief branded preloader shown on first paint, in the spirit of the
@@ -15,7 +20,11 @@ export default function Preloader() {
   const reducedMotion = useReducedMotion();
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
+  // Runs synchronously before the browser paints the first client-rendered
+  // frame — unlike useEffect (async, after paint), this closes the window
+  // where the real page (navbar, chat icon, everything) is briefly visible
+  // on screen before the preloader overlay mounts on top of it.
+  useIsomorphicLayoutEffect(() => {
     const alreadySeen = sessionStorage.getItem("monorite-preloader-seen");
     if (alreadySeen || reducedMotion) {
       return;
