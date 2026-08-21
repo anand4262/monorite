@@ -1,7 +1,7 @@
 import OpenAI from "openai";
-import { chatConfig } from "./config";
+import { chatConfig } from "../config";
 import { extractContactDetailsLocally } from "./local-contact-extractor";
-import type { ChatMessage, ChatOrigin, LeadRecord } from "./types";
+import type { ChatMessage, ChatOrigin, LeadRecord } from "../types";
 
 let client: OpenAI | null = null;
 function getClient(): OpenAI {

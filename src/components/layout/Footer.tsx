@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-canvas-border bg-canvas-soft">
       <FooterMarquee />
-      <Container className="py-20">
+      <Container className="pt-20 pb-10">
         <div className="grid gap-14 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-semibold text-ink">
@@ -70,11 +70,10 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-canvas-border pt-8 text-xs text-ink-faint md:flex-row md:items-center md:justify-between">
+        <div className="mt-10 border-t border-canvas-border pt-6 text-xs text-ink-faint">
           <p>
             &copy; {new Date().getFullYear()} {site.legalName}. All rights reserved.
           </p>
-          <p>{site.location}</p>
         </div>
       </Container>
     </footer>

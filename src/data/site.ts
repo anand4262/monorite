@@ -26,7 +26,7 @@ function resolveSiteUrl(): string {
 
 export const site = {
   name: "Monorite",
-  legalName: "Monorite Solutions",
+  legalName: "Monorite",
   tagline: "We study how your business runs. Then we build the systems that run it.",
   description:
     "Monorite helps trades, clinics, and local businesses still running on phone calls and spreadsheets get online, automate the busywork, and put AI voice and chat agents to work: websites, call assistants, custom CRMs, and the systems to run them.",

@@ -1,16 +1,6 @@
 import Container from "@/components/ui/Container";
 import Marquee from "@/components/ui/Marquee";
-
-const tools = [
-  "Twilio",
-  "Google Calendar",
-  "HubSpot",
-  "Zapier",
-  "Calendly",
-  "Slack",
-  "Stripe",
-  "QuickBooks",
-];
+import { trustBarTools } from "@/data/service-content";
 
 /**
  * The tools Monorite connects a client's systems to — a compatibility
@@ -28,7 +18,7 @@ export default function TrustBar() {
         </p>
       </Container>
       <Marquee
-        items={tools}
+        items={trustBarTools}
         gap="gap-4"
         renderItem={(name) => (
           <span className="flex items-center gap-2.5 rounded-xl border border-canvas-border bg-canvas-surface px-4 py-2.5 text-sm font-medium text-ink">

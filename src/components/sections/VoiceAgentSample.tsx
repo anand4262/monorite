@@ -7,7 +7,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { callSample } from "@/data/callSample";
+import { callSample } from "@/data/call-sample";
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds)) return "0:00";

@@ -69,6 +69,20 @@ export default function ContactForm() {
             Thanks for reaching out. We'll reply within one business day.
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            // Fresh timestamp, not the original page-load one — the
+            // honeypot timing check on the server measures time since
+            // this specific form instance was shown, not since the page
+            // itself first loaded.
+            renderedAt.current = Date.now();
+            setStatus("idle");
+          }}
+          className="text-sm font-medium text-ink-muted underline decoration-canvas-border underline-offset-4 transition-colors hover:text-ink"
+        >
+          Send another message
+        </button>
       </div>
     );
   }

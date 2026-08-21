@@ -1,31 +1,9 @@
-import { Target, HeartHandshake, ShieldCheck } from "lucide-react";
 import { site } from "@/data/site";
+import { studioValues } from "@/data/studio";
 import Container from "@/components/ui/Container";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-
-const values = [
-  {
-    icon: Target,
-    title: "Process before technology",
-    description:
-      "We diagnose before we prescribe. If the honest answer is 'you don't need AI for this,' we'll say so.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Built around your business",
-    description:
-      "No generic templates. Every system is designed around how your team actually operates today.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Direct access, always",
-    description:
-      "You work with the people who build your system, during launch and long after, no support ticket queue.",
-  },
-];
 
 /** Condensed version of the former standalone /about page — the founding
  * story in a couple of sentences plus the same three values, folded into
@@ -52,7 +30,7 @@ export default function Studio() {
         </Reveal>
 
         <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {values.map((value, i) => {
+          {studioValues.map((value, i) => {
             const Icon = value.icon;
             const index = String(i + 1).padStart(2, "0");
             return (

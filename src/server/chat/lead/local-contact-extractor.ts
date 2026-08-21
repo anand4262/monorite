@@ -1,4 +1,4 @@
-import type { ChatMessage } from "./types";
+import type { ChatMessage } from "../types";
 
 const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 // Loose on purpose: covers "0468 588 669", "+61 468 588 669",

@@ -32,5 +32,3 @@ export const contactFormSchema = z.object({
   // check to slow down scripted submissions.
   renderedAt: z.number().optional(),
 });
-
-export type ContactFormValues = z.infer<typeof contactFormSchema>;

@@ -1,4 +1,3 @@
-import { chatConfig } from "../config";
 import { projects } from "@/data/projects";
 import { stripMarkdown } from "./strip-markdown";
 
@@ -82,8 +81,4 @@ export function checkOutput(rawReply: string): string {
   }
 
   return reply;
-}
-
-export function withinHistoryLimit(count: number): boolean {
-  return count <= chatConfig.maxHistoryMessages;
 }

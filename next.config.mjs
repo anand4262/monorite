@@ -37,6 +37,7 @@ const ContentSecurityPolicy = `
   img-src 'self' data: blob: https://play-lh.googleusercontent.com https://vistalegalfirm.com https://www.vistalegalfirm.com https://kebab-knights.vercel.app https://images.unsplash.com;
   font-src 'self' data:;
   connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com;
+  frame-src https://www.google.com https://maps.google.com;
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';

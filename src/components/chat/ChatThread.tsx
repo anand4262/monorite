@@ -6,8 +6,8 @@ import { useChat, type ChatOrigin } from "./ChatProvider";
 import { useSpeechToText } from "./useSpeechToText";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { chatSuggestions } from "@/data/chat";
 
-const SUGGESTIONS = ["What services do you offer?", "Can you build me a website?", "Tell me about a project you've shipped"];
 const MAX_PDF_BYTES = 8 * 1024 * 1024;
 // Mirrors the server's messageSchema cap in app/api/chat/route.ts — capped
 // here too so a visitor gets an immediate stop rather than typing a long
@@ -101,7 +101,7 @@ export default function ChatThread({ compact = false, source }: { compact?: bool
 
         {messages.length === 1 && !isLoading && (
           <div className="flex flex-wrap gap-2 pt-1">
-            {SUGGESTIONS.map((s) => (
+            {chatSuggestions.map((s) => (
               <button
                 key={s}
                 type="button"

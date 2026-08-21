@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, PhoneCall, ShieldCheck, Ear, Phone, ArrowLeft } from "lucide-react";
+import { ShieldCheck, Phone, ArrowLeft } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 import Container from "@/components/ui/Container";
 import Badge from "@/components/ui/Badge";
@@ -8,7 +8,8 @@ import Button from "@/components/ui/Button";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Card from "@/components/ui/Card";
 import CTASection from "@/components/sections/CTASection";
-import { callSample } from "@/data/callSample";
+import { callSample } from "@/data/call-sample";
+import { receptionistTiers, receptionistTransparencyPoints } from "@/data/ai-receptionist";
 import { cn } from "@/lib/utils";
 
 export const metadata = buildMetadata({
@@ -17,30 +18,6 @@ export const metadata = buildMetadata({
     "Monorite's AI phone receptionist for trades, currently in pilot. Answers after-hours calls, tells real emergencies from routine bookings, and never leaves a caller with silence.",
   path: "/ai-receptionist",
 });
-
-const tiers = [
-  {
-    icon: AlertTriangle,
-    label: "Life-safety",
-    example: "Gas leak, smoke, electric shock, injury",
-    response:
-      "The agent's first response is always \"if anyone is in danger, hang up and call 000 now,\" before anything else. It still captures details and notifies the tradie.",
-  },
-  {
-    icon: PhoneCall,
-    label: "Urgent trade job",
-    example: "Burst pipe, no water, no power",
-    response:
-      "Triggers a live transfer to the tradie's mobile. If unanswered within 20 seconds, the agent takes a detailed message, sends an urgent SMS, and tells the caller when to expect a callback. Never silence.",
-  },
-  {
-    icon: Ear,
-    label: "Standard",
-    example: "Routine booking, general enquiry",
-    response:
-      "Normal capture flow: name, job type, address, and preferred time, confirmed with the caller and sent straight to the tradie.",
-  },
-];
 
 export default function AIReceptionistPage() {
   return (
@@ -179,7 +156,7 @@ export default function AIReceptionistPage() {
           />
 
           <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {tiers.map((tier, i) => {
+            {receptionistTiers.map((tier, i) => {
               const Icon = tier.icon;
               return (
                 <Reveal key={tier.label} blurIn delay={i * 0.08}>
@@ -211,44 +188,22 @@ export default function AIReceptionistPage() {
             title="It tells every caller it's an AI"
           />
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            <Reveal blurIn delay={0}>
-              <Card className="h-full">
-                <ShieldCheck className="h-6 w-6 text-accent-soft" strokeWidth={1.5} />
-                <h3 className="mt-5 font-display text-lg font-semibold text-ink">
-                  Upfront disclosure
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                  Every call opens with a clear statement that the caller is
-                  speaking with an AI assistant and that the call may be
-                  recorded. No pretending to be human.
-                </p>
-              </Card>
-            </Reveal>
-            <Reveal blurIn delay={0.08}>
-              <Card className="h-full">
-                <PhoneCall className="h-6 w-6 text-accent-soft" strokeWidth={1.5} />
-                <h3 className="mt-5 font-display text-lg font-semibold text-ink">
-                  Real fallbacks, not silence
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                  If a transfer goes unanswered or the system has an issue,
-                  the caller is never left hanging. A message, an SMS, or a
-                  clear next step every time.
-                </p>
-              </Card>
-            </Reveal>
-            <Reveal blurIn delay={0.16}>
-              <Card className="h-full">
-                <Ear className="h-6 w-6 text-accent-soft" strokeWidth={1.5} />
-                <h3 className="mt-5 font-display text-lg font-semibold text-ink">
-                  Personally reviewed, not a black box
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                  Every call is reviewed personally during the pilot, not a
-                  support ticket queue, not a faceless SaaS dashboard.
-                </p>
-              </Card>
-            </Reveal>
+            {receptionistTransparencyPoints.map((point, i) => {
+              const Icon = point.icon;
+              return (
+                <Reveal key={point.title} blurIn delay={i * 0.08}>
+                  <Card className="h-full">
+                    <Icon className="h-6 w-6 text-accent-soft" strokeWidth={1.5} />
+                    <h3 className="mt-5 font-display text-lg font-semibold text-ink">
+                      {point.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+                      {point.description}
+                    </p>
+                  </Card>
+                </Reveal>
+              );
+            })}
           </div>
         </Container>
       </section>

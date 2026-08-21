@@ -39,18 +39,14 @@ export default function Founders() {
                 <FounderPortrait key={member.name} member={member} index={i} />
               ))}
             </div>
-            <div className="pt-8 md:hidden">
+            <div className="md:hidden">
               <SwipeCarousel
                 items={team}
                 keyFor={(member) => member.name}
                 autoplayDelay={4500}
+                slideClassName=""
                 renderItem={(member) => (
-                  <FounderPortrait
-                    member={member}
-                    index={team.indexOf(member)}
-                    forceActive
-                    className="rounded-2xl border border-canvas-border"
-                  />
+                  <FounderPortrait member={member} index={team.indexOf(member)} forceActive />
                 )}
               />
             </div>

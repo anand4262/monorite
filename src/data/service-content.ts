@@ -1,5 +1,20 @@
 import type { IntegrationDemoTab } from "@/components/sections/service-panels/IntegrationDemoPanel";
 
+/** Homepage trust-bar marquee — a broad "we plug into what you already
+ * run" signal shown site-wide, deliberately not the same list as any one
+ * service's `logoGroups` below (those are specific, categorized examples
+ * for one service's integration demo, not a general compatibility claim). */
+export const trustBarTools = [
+  "Twilio",
+  "Google Calendar",
+  "HubSpot",
+  "Zapier",
+  "Calendly",
+  "Slack",
+  "Stripe",
+  "QuickBooks",
+];
+
 /** Per-service "how it works" proof, keyed by slug, for services where a
  * live-data mockup says more than a paragraph. Services without an entry
  * here fall back to `howItWorksFallback` below. */

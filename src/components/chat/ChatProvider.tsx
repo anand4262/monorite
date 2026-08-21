@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { chatGreeting } from "@/data/chat";
 
 export type ChatMessage = {
   id: string;
@@ -19,7 +20,7 @@ export type ChatOrigin = "demo" | "widget";
 const GREETING: ChatMessage = {
   id: "greeting",
   role: "assistant",
-  content: "Hey — I'm Monorite's assistant. Ask me about our services, a project we've built, or how this works.",
+  content: chatGreeting,
 };
 
 const SESSION_STORAGE_KEY = "monorite-chat-session";

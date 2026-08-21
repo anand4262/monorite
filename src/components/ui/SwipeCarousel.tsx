@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import { cn } from "@/lib/utils";
 
 /**
  * A fixed, one-at-a-time swipeable carousel for mobile — built on Embla
@@ -21,11 +22,16 @@ export default function SwipeCarousel<T>({
   keyFor,
   renderItem,
   autoplayDelay,
+  slideClassName = "px-6",
 }: {
   items: T[];
   keyFor: (item: T) => string;
   renderItem: (item: T) => ReactNode;
   autoplayDelay?: number;
+  /** Gutter around each slide. Defaults to the existing px-6 (a visible
+   * card floating with side margins) — pass "" for a full-bleed slide that
+   * touches the edges of whatever wraps this carousel instead. */
+  slideClassName?: string;
 }) {
   const autoplay = useRef(
     autoplayDelay ? Autoplay({ delay: autoplayDelay, stopOnInteraction: false }) : undefined,
@@ -61,7 +67,7 @@ export default function SwipeCarousel<T>({
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {items.map((item) => (
-            <div key={keyFor(item)} className="min-w-0 flex-[0_0_100%] px-6">
+            <div key={keyFor(item)} className={cn("min-w-0 flex-[0_0_100%]", slideClassName)}>
               {renderItem(item)}
             </div>
           ))}

@@ -7,8 +7,8 @@ import { checkOutput } from "./guardrails/output-guardrails";
 import { checkModeration } from "./guardrails/moderation";
 import { complete, isConfigured } from "./llm/provider";
 import { conversationStore } from "./store";
-import { shouldExtractLead, extractLead } from "./intake";
-import { extractContactDetailsLocally } from "./local-contact-extractor";
+import { shouldExtractLead, extractLead } from "./lead/intake";
+import { extractContactDetailsLocally } from "./lead/local-contact-extractor";
 import type { GenerateReplyInput, GenerateReplyResult } from "./types";
 
 // A hard ceiling on the moderation+completion step, independent of

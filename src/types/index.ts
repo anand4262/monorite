@@ -57,6 +57,25 @@ export interface ProcessStep {
   description: string;
 }
 
+export interface StudioValue {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+export interface ReceptionistTier {
+  icon: LucideIcon;
+  label: string;
+  example: string;
+  response: string;
+}
+
+export interface TransparencyPoint {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;

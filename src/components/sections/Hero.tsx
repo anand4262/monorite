@@ -3,32 +3,19 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
 import { site } from "@/data/site";
-
-/** Small decorative labels scattered around the hero headline, echoing the
- * services Monorite builds — a soft blurred glow card per label, no real
- * imagery needed. Positions are percentage-based so they scale with the
- * viewport; hidden on mobile where there isn't room for them without
- * crowding the headline. */
-const floatingCards: {
-  label: string;
-  className: string;
-}[] = [
-  { label: "WEBSITE BUILD", className: "left-[6%] top-[14%] -rotate-6" },
-  { label: "AI CALL AGENT", className: "left-[26%] top-[4%] rotate-3" },
-  { label: "CRM SYSTEM", className: "right-[8%] top-[10%] rotate-6" },
-  { label: "REVIEW AUTOMATION", className: "left-[4%] top-[60%] rotate-3" },
-  { label: "PROCESS DISCOVERY", className: "right-[5%] top-[58%] -rotate-3" },
-  { label: "LAUNCH SUPPORT", className: "right-[22%] top-[78%] rotate-6" },
-];
+import { heroFloatingCards } from "@/data/hero";
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden pb-24 pt-40 md:pb-32 md:pt-48">
+      {/* Positions are percentage-based so they scale with the viewport;
+       * hidden on mobile where there isn't room for them without crowding
+       * the headline. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden md:block"
       >
-        {floatingCards.map((card) => (
+        {heroFloatingCards.map((card) => (
           <div
             key={card.label}
             className={`absolute h-24 w-36 rounded-2xl border border-canvas-border bg-white/[0.02] p-3 ${card.className}`}
