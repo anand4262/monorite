@@ -1,5 +1,4 @@
 import { buildMetadata } from "@/lib/seo";
-import { site } from "@/data/site";
 import { services } from "@/data/services";
 import { projects } from "@/data/projects";
 import Container from "@/components/ui/Container";
@@ -21,8 +20,9 @@ import Testimonials from "@/components/sections/Testimonials";
 import CTASection from "@/components/sections/CTASection";
 
 export const metadata = buildMetadata({
-  title: site.name,
-  description: site.description,
+  title: "Melbourne AI Automation Agency for Trades",
+  description:
+    "Monorite is a Melbourne AI automation agency for trades, clinics, and local businesses: websites, AI receptionists, and workflow automation in one system.",
   path: "/",
 });
 

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { blogPosts, getBlogPostBySlug } from "@/data/blog";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildBlogPostingJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import Container from "@/components/ui/Container";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
@@ -27,6 +27,22 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
   return (
     <article className="pb-24 pt-40 md:pb-32 md:pt-48">
+      <script
+        type="application/ld+json"
+        // Internally-defined, non-user-supplied data — safe to serialize directly.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBlogPostingJsonLd(post)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbJsonLd([
+              { name: "Blog", path: "/blog" },
+              { name: post.title, path: `/blog/${post.slug}` },
+            ]),
+          ),
+        }}
+      />
       <Container className="max-w-3xl">
         <Link
           href="/blog"

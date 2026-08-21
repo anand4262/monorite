@@ -34,6 +34,16 @@ const mono = Space_Mono({
 export const metadata: Metadata = {
   ...buildMetadata({ title: site.name, description: site.description }),
   metadataBase: new URL(site.url),
+  // Empty until GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION are set —
+  // Next omits a verification meta tag entirely when its value is
+  // undefined, so this is a no-op until the env vars are added. See
+  // README.md "Getting indexed" for how to get these values.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
+  },
 };
 
 export const viewport: Viewport = {

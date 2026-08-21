@@ -36,8 +36,21 @@ All of these are read server-side only (never in a client component) except
 | `CONTACT_TO_EMAIL` | For contact form | Inbox that receives contact form submissions. |
 | `CONTACT_FROM_EMAIL` | For contact form | Resend "from" address (must be on a domain verified with Resend). |
 | `OPENAI_API_KEY` | For the chat widget | Powers the chat widget and homepage chat demo (`/api/chat`). Without it, the chat UI still renders but replies with a clear "not configured" message instead of erroring. |
+| `GOOGLE_SITE_VERIFICATION` | For Search Console | Renders a `google-site-verification` meta tag. See "Getting indexed" below. |
+| `BING_SITE_VERIFICATION` | For Bing Webmaster Tools | Renders a `msvalidate.01` meta tag. See "Getting indexed" below. |
 
 The Google Analytics measurement ID is intentionally hardcoded in `src/data/site.ts` (`googleAnalyticsId`) rather than an env var — GA IDs are public by design, and this keeps GA working the same way in every environment without extra Vercel config. `<GoogleAnalytics>` only renders when `NODE_ENV === "production"`, so local dev never sends events.
+
+## Getting indexed
+
+Metadata, sitemap, and structured data being correct doesn't get a site
+crawled — that requires actually telling Google and Bing it exists. As of
+this writing the site returns zero results for a `site:` search, meaning
+it has not been indexed yet. To fix that:
+
+1. **Google Search Console** ([search.google.com/search-console](https://search.google.com/search-console)) — add the site as a property, verify ownership (the "HTML tag" method matches the `GOOGLE_SITE_VERIFICATION` env var above — paste the `content` value from the tag Google gives you, redeploy, then click Verify), then submit `https://www.monorite.com/sitemap.xml` under Sitemaps and use URL Inspection → Request Indexing on the homepage.
+2. **Bing Webmaster Tools** ([bing.com/webmasters](https://www.bing.com/webmasters)) — same idea; it also indexes for Yahoo and powers some AI answer engines. Can import verification directly from a connected Google Search Console account, or verify manually via `BING_SITE_VERIFICATION`.
+3. **Google Business Profile** ([business.google.com](https://business.google.com)) — since this is a real local business (see the `ProfessionalService` JSON-LD in `layout.tsx`), a claimed and verified GBP listing is what actually drives the local map-pack results for searches like "AI automation agency Melbourne" — a well-optimized website alone does not.
 
 ## Project structure
 

@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { Project } from "@/types";
 import { getServiceBySlug } from "@/data/services";
 import SwipeCarousel from "@/components/ui/SwipeCarousel";
 import Reveal from "@/components/ui/Reveal";
+
+// Card image is a fixed aspect-[4/3] box across the whole viewport range
+// (see the `relative aspect-[4/3]` wrapper in ProjectCard below), so one
+// `sizes` value describes every breakpoint accurately.
+const CARD_IMAGE_SIZES = "(min-width: 768px) 40vw, 90vw";
 
 function ProjectImage({ project }: { project: Project }) {
   return project.image && project.orientation === "portrait" ? (
@@ -14,27 +20,30 @@ function ProjectImage({ project }: { project: Project }) {
          screenshot sits on top at full aspect via object-contain so a
          portrait phone capture doesn't get cropped top/bottom to fit a
          landscape box. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={project.image}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full scale-125 object-cover opacity-30 blur-2xl"
+        fill
+        sizes={CARD_IMAGE_SIZES}
+        className="scale-125 object-cover opacity-30 blur-2xl"
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={project.image}
         alt={`${project.client}: ${project.title}`}
-        className="absolute inset-0 h-full w-full object-contain p-6"
+        fill
+        sizes={CARD_IMAGE_SIZES}
+        className="object-contain p-6"
       />
     </>
   ) : (
     project.image && (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         src={project.image}
         alt={`${project.client}: ${project.title}`}
-        className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
+        fill
+        sizes={CARD_IMAGE_SIZES}
+        className="object-cover transition-transform duration-700 ease-premium group-hover:scale-105"
       />
     )
   );

@@ -18,6 +18,9 @@ export const services: Service[] = [
       "A fast, SEO-ready website built to bring in work, not sit there as a digital brochure.",
     description:
       "A website that shows up on Google, loads fast on every device, and turns a visitor into an enquiry. It's wired into the same CRM, call assistant, and booking system as everything else we build for you.",
+    seoTitle: "Website Design for Trades & Local Business",
+    seoDescription:
+      "SEO-ready websites for trades, clinics, and local businesses in Melbourne. Fast on every device, built to bring in enquiries, not just look good.",
     outcomes: ["More inbound enquiries", "Higher search visibility", "One connected system, not a standalone brochure site"],
     bullets: [
       "Fast on every phone, tablet, and screen",
@@ -36,6 +39,9 @@ export const services: Service[] = [
       "Answers customer calls and messages instantly, and puts AI to work internally too.",
     description:
       "Your AI assistant answers customer calls and messages instantly, understands your business's real hours, services, and policies, and captures bookings. Every enquiry is sent straight to you, day or night. The same approach extends internally: assistants trained on your documents and policies, and document intelligence for contracts, invoices, and forms.",
+    seoTitle: "AI Receptionist & Chat Assistant for Trades",
+    seoDescription:
+      "Monorite's AI phone receptionist and chat assistant for trades and local businesses. Answers every call and message, captures bookings, never misses a lead.",
     outcomes: ["Zero missed calls", "Faster response times", "AI applied wherever it earns its keep"],
     bullets: [
       "Trained on your actual services, pricing, and availability",
@@ -54,6 +60,9 @@ export const services: Service[] = [
       "Staff portals, customer portals, and operations dashboards built around how you work.",
     description:
       "Staff portals, customer portals, operations dashboards, booking systems, all built around how your business actually works, not a generic template.",
+    seoTitle: "Custom Business Software & Staff Portals",
+    seoDescription:
+      "Custom staff portals, customer portals, and operations dashboards built around how your business actually works, not a generic off-the-shelf template.",
     outcomes: ["Software that fits your workflow", "One system instead of five", "Room to grow"],
     bullets: [
       "Custom dashboards for operations and reporting",
@@ -72,6 +81,9 @@ export const services: Service[] = [
       "Connecting the tools you already use and automating the manual steps between them.",
     description:
       "Lead management, onboarding, quoting, invoicing, and reporting, connected end-to-end so nothing needs re-entering by hand. That means wiring the tools you already use (Xero, Microsoft 365, Google Workspace, CRMs, job-management platforms) into one coherent workflow, and automating the handoffs between them.",
+    seoTitle: "Workflow & Business Process Automation",
+    seoDescription:
+      "Workflow automation for trades and local businesses: connecting Xero, Microsoft 365, CRMs, and job-management tools so nothing needs re-entering by hand.",
     outcomes: ["Hours saved every week", "One source of truth, not five disconnected tools", "Fewer dropped handoffs"],
     bullets: [
       "Automates handoffs between tools and teams",
@@ -89,6 +101,9 @@ export const services: Service[] = [
     shortDescription: "Direct access to the people who built your system, not a support queue.",
     description:
       "Direct access to the people who built your system, not a support queue. When something needs adjusting as your business grows, we're already familiar with how it works.",
+    seoTitle: "Ongoing Support for Websites & AI Systems",
+    seoDescription:
+      "Direct access to the Monorite team that built your website, AI receptionist, or automation, not a support queue. Fast turnarounds as your business grows.",
     outcomes: ["Fast turnarounds", "No re-explaining your business", "A system that evolves with you"],
     bullets: [
       "Direct line to your original build team",

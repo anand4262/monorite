@@ -12,6 +12,12 @@ export interface Service {
   /** Real, freely-licensed photo used behind the service's carousel card
    * and detail-page hero, treated with the site's monochrome duotone wash. */
   image: string;
+  /** Keyword-precise <title>/description for search snippets — deliberately
+   * separate from `name`/`shortDescription`, which stay brand-voice for the
+   * on-page H1 and card copy. Search engines reward specificity (service +
+   * market) that would read as stiff if it were the page's actual heading. */
+  seoTitle: string;
+  seoDescription: string;
 }
 
 export interface Project {

@@ -48,11 +48,11 @@ export const projects: Project[] = [
     stack: ["React", "Node.js", "SEO"],
     orientation: "landscape",
     icon: "https://vistalegalfirm.com/images/Vista-Legal-Registered-Logo.png",
-    image: "/images/work/vista-legal/home.png",
+    image: "/images/work/vista-legal/home.webp",
     screenshots: [
-      "/images/work/vista-legal/home.png",
-      "/images/work/vista-legal/practice-areas.png",
-      "/images/work/vista-legal/about-section.png",
+      "/images/work/vista-legal/home.webp",
+      "/images/work/vista-legal/practice-areas.webp",
+      "/images/work/vista-legal/about-section.webp",
     ],
   },
   {
@@ -101,11 +101,11 @@ export const projects: Project[] = [
     stack: ["Next.js", "SEO"],
     orientation: "landscape",
     icon: "https://kebab-knights.vercel.app/_next/image?url=%2Fimages%2Flogo%2Fkebab-knights-logo-t.png&w=384&q=75",
-    image: "/images/work/kebab-knights/home.png",
+    image: "/images/work/kebab-knights/home.webp",
     screenshots: [
-      "/images/work/kebab-knights/home.png",
-      "/images/work/kebab-knights/menu-section.png",
-      "/images/work/kebab-knights/gallery-section.png",
+      "/images/work/kebab-knights/home.webp",
+      "/images/work/kebab-knights/menu-section.webp",
+      "/images/work/kebab-knights/gallery-section.webp",
     ],
   },
   {
@@ -154,7 +154,7 @@ export const projects: Project[] = [
     visitUrl: "https://play.google.com/store/apps/details?id=com.cable.pulse.crm&hl=en_IN",
     stack: ["React Native", "Java", "Android"],
     orientation: "portrait",
-    icon: "/images/work/cable-pulse-crm/icon.png",
+    icon: "/images/work/cable-pulse-crm/icon.webp",
     image: "/images/work/cable-pulse-crm/screenshot-1.png",
     screenshots: [
       "/images/work/cable-pulse-crm/screenshot-1.png",

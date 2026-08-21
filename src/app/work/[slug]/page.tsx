@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { projects, getProjectBySlug } from "@/data/projects";
 import { getServiceBySlug } from "@/data/services";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildBreadcrumbJsonLd } from "@/lib/seo";
 import Container from "@/components/ui/Container";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
@@ -81,6 +82,15 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Internally-defined, non-user-supplied data — safe to serialize directly.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbJsonLd([{ name: project.client, path: `/work/${project.slug}` }]),
+          ),
+        }}
+      />
       <section className="pb-12 pt-40 md:pb-16 md:pt-48">
         <Container>
           <div className="flex items-center gap-4">
@@ -126,18 +136,20 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
                   {/* Blurred backdrop keeps the frame filled even when the
                      real screenshot is a tall phone capture rather than a
                      landscape banner. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={project.image}
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 h-full w-full scale-125 object-cover opacity-25 blur-3xl"
+                    fill
+                    sizes="(min-width: 1024px) 55vw, 90vw"
+                    className="scale-125 object-cover opacity-25 blur-3xl"
                   />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={project.image}
                     alt={`${project.client}: ${project.title}`}
-                    className="relative h-auto max-h-full w-auto max-w-full rounded-xl object-contain shadow-2xl shadow-black/40"
+                    fill
+                    sizes="(min-width: 1024px) 55vw, 90vw"
+                    className="rounded-xl object-contain shadow-2xl shadow-black/40"
                   />
                 </div>
               </Reveal>
@@ -233,12 +245,13 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
               <div className="mt-8 flex gap-4 overflow-x-auto pb-4">
                 {project.screenshots.slice(1).map((shot, i) => (
                   <Reveal key={shot} delay={i * 0.05}>
-                    <div className="h-[360px] w-[180px] shrink-0 overflow-hidden rounded-2xl border border-canvas-border bg-canvas-soft">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative h-[360px] w-[180px] shrink-0 overflow-hidden rounded-2xl border border-canvas-border bg-canvas-soft">
+                      <Image
                         src={shot}
                         alt={`${project.client} screenshot ${i + 1}`}
-                        className="h-full w-full object-cover transition-transform duration-500 ease-premium hover:scale-105"
+                        fill
+                        sizes="180px"
+                        className="object-cover transition-transform duration-500 ease-premium hover:scale-105"
                       />
                     </div>
                   </Reveal>
@@ -248,12 +261,13 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {project.screenshots.slice(1).map((shot, i) => (
                   <Reveal key={shot} delay={i * 0.05}>
-                    <div className="h-56 overflow-hidden rounded-2xl border border-canvas-border bg-canvas-soft">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                    <div className="relative h-56 overflow-hidden rounded-2xl border border-canvas-border bg-canvas-soft">
+                      <Image
                         src={shot}
                         alt={`${project.client} screenshot ${i + 1}`}
-                        className="h-full w-full object-cover transition-transform duration-500 ease-premium hover:scale-105"
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-500 ease-premium hover:scale-105"
                       />
                     </div>
                   </Reveal>

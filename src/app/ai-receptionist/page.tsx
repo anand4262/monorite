@@ -13,9 +13,9 @@ import { receptionistTiers, receptionistTransparencyPoints } from "@/data/ai-rec
 import { cn } from "@/lib/utils";
 
 export const metadata = buildMetadata({
-  title: "AI Phone Receptionist",
+  title: "AI Phone Receptionist for Trades — Melbourne",
   description:
-    "Monorite's AI phone receptionist for trades, currently in pilot. Answers after-hours calls, tells real emergencies from routine bookings, and never leaves a caller with silence.",
+    "Monorite's AI phone receptionist for Melbourne trades. Answers after-hours calls, tells emergencies from routine bookings, never leaves a caller with silence.",
   path: "/ai-receptionist",
 });
 

@@ -17,13 +17,13 @@ interface PageSeoInput {
 }
 
 const DEFAULT_KEYWORDS = [
-  "AI automation agency",
-  "AI phone receptionist",
+  "AI automation agency Melbourne",
+  "AI phone receptionist for trades",
+  "AI receptionist for tradies",
+  "website design for local business",
   "AI chat assistant",
-  "business automation",
-  "website design and development",
-  "custom business software",
-  "workflow automation",
+  "custom business software Melbourne",
+  "workflow automation agency",
   site.name,
 ];
 
@@ -86,5 +86,70 @@ export function buildOrganizationJsonLd() {
     },
     sameAs: Object.values(site.social),
     foundingDate: String(site.founded),
+  };
+}
+
+/** schema.org FAQPage JSON-LD from a page's existing on-screen Q&A content
+ * (the FaqAccordion data) — makes those questions eligible for a rich
+ * result/expandable snippet without duplicating the copy anywhere. */
+export function buildFaqJsonLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+/** schema.org Service JSON-LD for a service detail page, linking back to the
+ * agency as `provider` so it can back a service-area rich result. */
+export function buildServiceJsonLd(service: { name: string; description: string; slug: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    description: service.description,
+    url: `${site.url}/services/${service.slug}`,
+    provider: { "@type": "ProfessionalService", name: site.name, url: site.url },
+    areaServed: { "@type": "City", name: site.address.suburb },
+  };
+}
+
+/** schema.org BreadcrumbList JSON-LD. `items` excludes the implicit Home
+ * entry, which this always prepends. */
+export function buildBreadcrumbJsonLd(items: { name: string; path: string }[]) {
+  const all = [{ name: "Home", path: "" }, ...items];
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: all.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: `${site.url}${item.path}`,
+    })),
+  };
+}
+
+/** schema.org BlogPosting JSON-LD for a blog post detail page. */
+export function buildBlogPostingJsonLd(post: {
+  title: string;
+  excerpt: string;
+  date: string;
+  slug: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    url: `${site.url}/blog/${post.slug}`,
+    author: { "@type": "Organization", name: site.name, url: site.url },
+    publisher: { "@type": "Organization", name: site.name, url: site.url },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${site.url}/blog/${post.slug}` },
   };
 }

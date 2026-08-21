@@ -9,7 +9,7 @@ import {
   howItWorksFallback,
   faqContent,
 } from "@/data/service-content";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildFaqJsonLd, buildServiceJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo";
 import Container from "@/components/ui/Container";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
@@ -28,8 +28,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   const service = getServiceBySlug(params.slug);
   if (!service) return buildMetadata({ title: "Service not found", noIndex: true });
   return buildMetadata({
-    title: service.name,
-    description: service.shortDescription,
+    title: service.seoTitle,
+    description: service.seoDescription,
     path: `/services/${service.slug}`,
   });
 }
@@ -47,6 +47,29 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
 
   return (
     <>
+      {faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          // Internally-defined, non-user-supplied data — safe to serialize directly.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildServiceJsonLd({ name: service.name, description: service.description, slug: service.slug }),
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbJsonLd([{ name: service.name, path: `/services/${service.slug}` }]),
+          ),
+        }}
+      />
       <section className="pb-20 pt-40 md:pb-28 md:pt-48">
         <Container className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div>
