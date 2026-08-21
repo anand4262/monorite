@@ -6,13 +6,38 @@ interface PageSeoInput {
   description?: string;
   path?: string;
   noIndex?: boolean;
+  /** Extra terms specific to this page, added on top of the site-wide
+   * defaults below. No modern social platform (WhatsApp/Facebook/LinkedIn/
+   * X/iMessage) reads meta keywords for link previews, and Google hasn't
+   * used it for ranking in over a decade — it's included anyway since it's
+   * free and some minor tools/aggregators still read it, but title and
+   * description (already sent via openGraph/twitter below) are what
+   * actually drive what shows up when a link is shared. */
+  keywords?: string[];
 }
+
+const DEFAULT_KEYWORDS = [
+  "AI automation agency",
+  "AI phone receptionist",
+  "AI chat assistant",
+  "business automation",
+  "website design and development",
+  "custom business software",
+  "workflow automation",
+  site.name,
+];
 
 /**
  * Builds a consistent Metadata object for a page, including OpenGraph and
  * Twitter card data, and a canonical URL derived from NEXT_PUBLIC_SITE_URL.
  */
-export function buildMetadata({ title, description, path = "", noIndex }: PageSeoInput): Metadata {
+export function buildMetadata({
+  title,
+  description,
+  path = "",
+  noIndex,
+  keywords,
+}: PageSeoInput): Metadata {
   const url = `${site.url}${path}`;
   const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
   const desc = description ?? site.description;
@@ -20,6 +45,7 @@ export function buildMetadata({ title, description, path = "", noIndex }: PageSe
   return {
     title: fullTitle,
     description: desc,
+    keywords: Array.from(new Set([...(keywords ?? []), ...DEFAULT_KEYWORDS])),
     alternates: { canonical: url },
     robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
