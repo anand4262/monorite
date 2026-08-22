@@ -20,10 +20,10 @@ export function shouldExtractLead(messages: ChatMessage[], hasDocument: boolean)
   return hasDocument || messages.filter((m) => m.role === "user").length >= 3;
 }
 
-/** A second, small LLM call that summarizes the conversation into what the
- * team actually wants to read — service interest and a plain-English
- * description of the visitor's business — rather than making a human
- * re-read the whole transcript. Contact details are deliberately NOT part
+/** A second, small LLM call that turns the transcript into an actual read
+ * on the visitor — not just a one-line label, but what they need, why,
+ * and anything urgent or notable — so the team gets the conversation
+ * *understood*, not just logged. Contact details are deliberately NOT part
  * of this call: they're pulled locally instead (local-contact-extractor.ts)
  * so name/email/phone never have to be sent to the LLM provider just to
  * extract them back out again. Best-effort: a failure here never blocks
@@ -58,13 +58,13 @@ export async function extractLead(
     const completion = await getClient().chat.completions.create({
       model: chatConfig.model,
       temperature: 0,
-      max_tokens: 200,
+      max_tokens: 350,
       response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
           content:
-            'Summarize this support chat transcript for internal follow-up. Respond with strict JSON: {"serviceInterest": string|null, "businessSummary": string|null}. serviceInterest is the specific service they seem interested in, or null if unclear. businessSummary is one or two sentences describing their business and what they need, based only on what they actually said — null if there isn\'t enough to summarize yet. Do not include any names, email addresses, or phone numbers in your response even if they appear in the transcript.',
+            'Analyze this support chat transcript for internal follow-up — the team reading this has NOT read the transcript themselves, so this is their only understanding of the conversation. Respond with strict JSON: {"serviceInterest": string|null, "businessSummary": string|null}. serviceInterest is the specific service they seem interested in, or null if unclear. businessSummary is a real analysis in 3-5 sentences: what they actually need and why, their type of business, any urgency or timeline mentioned, and what the team should say or do next when following up — based only on what they actually said, null if there isn\'t enough yet to say anything useful. Do not include any names, email addresses, or phone numbers in your response even if they appear in the transcript.',
         },
         { role: "user", content: `${transcript}${documentBlock}` },
       ],

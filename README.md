@@ -38,6 +38,10 @@ All of these are read server-side only (never in a client component) except
 | `OPENAI_API_KEY` | For the chat widget | Powers the chat widget and homepage chat demo (`/api/chat`). Without it, the chat UI still renders but replies with a clear "not configured" message instead of erroring. |
 | `GOOGLE_SITE_VERIFICATION` | For Search Console | Renders a `google-site-verification` meta tag. See "Getting indexed" below. |
 | `BING_SITE_VERIFICATION` | For Bing Webmaster Tools | Renders a `msvalidate.01` meta tag. See "Getting indexed" below. |
+| `TELEGRAM_BOT_TOKEN` | For lead notifications | Sends a Telegram push notification the first time a chat conversation becomes a real lead. See "Lead notifications" below. |
+| `TELEGRAM_CHAT_ID` | For lead notifications | Which Telegram chat receives that notification. |
+| `SUPABASE_URL` | For the database | Durably stores every contact submission and chat lead. See "Database (Supabase)" below. |
+| `SUPABASE_SERVICE_ROLE_KEY` | For the database | Full read/write access, server-only — never exposed to the client. See "Database (Supabase)" below. |
 
 The Google Analytics measurement ID is intentionally hardcoded in `src/data/site.ts` (`googleAnalyticsId`) rather than an env var — GA IDs are public by design, and this keeps GA working the same way in every environment without extra Vercel config. `<GoogleAnalytics>` only renders when `NODE_ENV === "production"`, so local dev never sends events.
 
@@ -51,6 +55,81 @@ it has not been indexed yet. To fix that:
 1. **Google Search Console** ([search.google.com/search-console](https://search.google.com/search-console)) — add the site as a property, verify ownership (the "HTML tag" method matches the `GOOGLE_SITE_VERIFICATION` env var above — paste the `content` value from the tag Google gives you, redeploy, then click Verify), then submit `https://www.monorite.com/sitemap.xml` under Sitemaps and use URL Inspection → Request Indexing on the homepage.
 2. **Bing Webmaster Tools** ([bing.com/webmasters](https://www.bing.com/webmasters)) — same idea; it also indexes for Yahoo and powers some AI answer engines. Can import verification directly from a connected Google Search Console account, or verify manually via `BING_SITE_VERIFICATION`.
 3. **Google Business Profile** ([business.google.com](https://business.google.com)) — since this is a real local business (see the `ProfessionalService` JSON-LD in `layout.tsx`), a claimed and verified GBP listing is what actually drives the local map-pack results for searches like "AI automation agency Melbourne" — a well-optimized website alone does not.
+
+## Lead notifications
+
+When a chat conversation crosses the "substantial" threshold (three or
+more visitor messages, or a shared PDF — see `shouldExtractLead` in
+`src/server/chat/lead/intake.ts`), the team gets pushed a Telegram message
+with the AI's read on what the visitor needs (service interest, a real
+analysis of their situation and urgency, not just a one-line label) plus a
+snapshot of the actual conversation, all in one notification — no need to
+open a dashboard. This fires once per conversation, not once per message.
+
+Leads are always captured and saved to the conversation store regardless
+of whether this is configured — the Telegram push is purely an
+on-top notification layer. To turn it on:
+
+1. Message [@BotFather](https://t.me/BotFather) on Telegram, send `/newbot`, and follow the prompts (name + username). It replies with a bot token — that's `TELEGRAM_BOT_TOKEN`.
+2. Message your new bot directly (search its username, hit Start) or add it to a group you want leads posted in.
+3. Get the chat ID: visit `https://api.telegram.org/bot<TOKEN>/getUpdates` in a browser after sending the bot a message, and read `message.chat.id` from the JSON response (negative numbers are groups, positive are individual chats). That's `TELEGRAM_CHAT_ID`.
+4. Set both in `.env.local` (or your deployment platform's env vars) and redeploy.
+
+Reminder: the conversation store itself is in-memory (see "Known gotchas"
+below). See "Database (Supabase)" below for durable storage of every lead.
+
+## Database (Supabase)
+
+Every contact form submission and every chat lead (with its full
+transcript) is stored in Postgres via Supabase — separate from, and more
+durable than, the in-memory `conversationStore` used mid-conversation.
+Chat leads upsert by session, so the same row keeps updating with the
+fuller analysis and transcript as a conversation continues; contact
+submissions are one row per form send.
+
+To turn it on:
+
+1. Sign up at [supabase.com](https://supabase.com) (free tier) and create a new project (pick a region close to your customers, e.g. Sydney for an AU business — this can't be changed later without migrating). Save the database password somewhere safe; you won't need it for this setup, but Supabase will ask you to set one.
+2. Wait for the project to finish provisioning (~2 minutes), then open the **SQL Editor** in the left sidebar and run:
+
+   ```sql
+   create table contact_submissions (
+     id uuid primary key default gen_random_uuid(),
+     name text not null,
+     email text not null,
+     company text,
+     phone text,
+     message text not null,
+     created_at timestamptz not null default now()
+   );
+
+   create table chat_leads (
+     id uuid primary key default gen_random_uuid(),
+     session_id uuid not null unique,
+     origin text not null,
+     service_interest text,
+     business_summary text,
+     source_document text,
+     contact_name text,
+     contact_email text,
+     contact_phone text,
+     transcript jsonb not null,
+     created_at timestamptz not null default now(),
+     updated_at timestamptz not null default now()
+   );
+   ```
+
+3. Go to **Project Settings → API**. Copy the **Project URL** (that's `SUPABASE_URL`) and the **`service_role`** secret key (that's `SUPABASE_SERVICE_ROLE_KEY` — NOT the `anon`/`public` key; this project only ever calls Supabase from server-side code, never the browser, so the full-access key is the right one and is never exposed to visitors).
+4. Set both in `.env.local` (and on your deployment platform) and redeploy.
+
+Once set, you can browse, search, and filter every submission and lead directly in Supabase's **Table Editor** — no admin page needed in this codebase.
+
+Code-wise, this follows a simple model layer: `server/db/client.ts` is the
+only place that constructs the Supabase client, and `server/db/models/`
+holds one file per table (`contact-submission.ts`, `chat-lead.ts`), each
+exporting typed functions that do exactly one query. Routes
+(`api/contact/route.ts`) and the chat orchestrator call those functions —
+they never import the Supabase client or write raw queries themselves.
 
 ## Project structure
 
@@ -69,6 +148,7 @@ src/
   data/                  # Typed content: the single source of truth (see below)
   lib/                   # utils, zod schemas, rate limiting, seo helpers, analytics
   server/chat/           # the chat pipeline (see "Chat system architecture" below)
+  server/db/             # database layer: client.ts (connection) + models/ (one file per table, all reads/writes go through these — routes and the chat orchestrator never call Supabase directly)
   types/                 # shared TypeScript types
 ```
 
@@ -111,8 +191,8 @@ The chat widget (`src/components/chat/`) talks to `POST /api/chat`
 3. **Knowledge retrieval** (`knowledge/build-knowledge-base.ts`, `knowledge/retriever.ts`) — pulls relevant chunks out of `src/data/*.ts` (the same content the pages render) plus any uploaded PDF text.
 4. **Persona + completion** (`persona.ts`, `llm/provider.ts`) — builds the system prompt and calls the OpenAI chat completion.
 5. **Output guardrails** (`guardrails/output-guardrails.ts`, `guardrails/strip-markdown.ts`) — trims/cleans the reply before it's returned.
-6. **Lead capture** (`lead/intake.ts`, `lead/local-contact-extractor.ts`) — fire-and-forget after the reply is already sent, so it never adds latency. Name/email/phone are pulled out of the visitor's own messages locally with regex (`local-contact-extractor.ts`) rather than sent to the LLM; a separate small LLM call (`intake.ts`) only summarizes service interest and business context, and only once the conversation is substantial enough to be worth it (`shouldExtractLead`).
-7. **Store** (`store/`) — an in-memory conversation/lead store (`store/memory-store.ts`). **Not persistent** — it resets on every server restart/redeploy. Swap in a real database if leads need to survive that.
+6. **Lead capture** (`lead/intake.ts`, `lead/local-contact-extractor.ts`, `lead/telegram-notify.ts`) — fire-and-forget after the reply is already sent, so it never adds latency. Name/email/phone are pulled out of the visitor's own messages locally with regex (`local-contact-extractor.ts`) rather than sent to the LLM; a separate small LLM call (`intake.ts`) analyzes service interest and business context, and only once the conversation is substantial enough to be worth it (`shouldExtractLead`). Every qualifying turn upserts the lead (with its transcript) to the database via `server/db/models/chat-lead.ts`; the first time a lead is captured for a session, `telegram-notify.ts` also pushes that analysis plus a conversation snapshot to Telegram — see "Lead notifications" and "Database (Supabase)" above.
+7. **Store** (`store/`) — an in-memory conversation/lead store (`store/memory-store.ts`) used mid-conversation (so a follow-up message can see earlier turns). **Not persistent** — it resets on every server restart/redeploy. The Supabase tables above are the actual durable record; this store isn't it.
 
 The route also handles PDF uploads: `document-extractor.ts` (which wraps
 `pdf-parse` and `@napi-rs/canvas`, listed in `next.config.mjs`'s
@@ -133,8 +213,8 @@ loaded — safe to call unconditionally.
 ## Known gotchas
 
 - **`/about`, `/services`, `/work` are permanent redirects** to homepage anchors (`/#studio`, `/#services`, `/#work` — see `next.config.mjs`), not real pages. `sitemap.ts` deliberately excludes them so search engines aren't given redirecting URLs.
-- **The conversation/lead store is in-memory**, not a database — see "Chat system architecture" above.
-- **Without `OPENAI_API_KEY` or `RESEND_API_KEY`**, the chat widget and contact form both degrade gracefully (clear "not configured" messaging) instead of crashing — useful for running the site read-only in a fresh clone.
+- **The mid-conversation `conversationStore` is in-memory**, not a database — durable storage is a separate layer (Supabase, see "Database (Supabase)" above).
+- **Without `OPENAI_API_KEY`, `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID`, or `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`**, the chat widget, contact form, lead notifications, and database storage all degrade gracefully (clear "not configured" messaging, or a silent no-op) instead of crashing — useful for running the site read-only in a fresh clone.
 - **The OG image (`src/app/opengraph-image.png`) is a static, pre-baked file**, not a dynamic `next/og` route. This is intentional: WhatsApp in particular wouldn't reliably render the dynamic version (slow generation + RGBA alpha channel), so it was replaced with a hand-designed static PNG that mirrors the real homepage hero.
 
 ## Rebranding

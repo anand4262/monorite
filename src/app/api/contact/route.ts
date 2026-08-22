@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { contactFormSchema } from "@/lib/validations";
 import { isRateLimited } from "@/lib/rate-limit";
 import { isSameOrigin } from "@/lib/security";
+import { saveContactSubmission } from "@/server/db/models/contact-submission";
 import { site } from "@/data/site";
 
 export const runtime = "nodejs";
@@ -67,6 +68,12 @@ export async function POST(request: NextRequest) {
   if (renderedAt && Date.now() - renderedAt < 2000) {
     return NextResponse.json({ error: "Please try submitting again." }, { status: 400 });
   }
+
+  // Stored before the email attempt so a submission is never lost to a
+  // transient email-provider failure — best-effort, never blocks or fails
+  // the response either way (a visitor's confirmation shouldn't hinge on
+  // whether the database write succeeded).
+  await saveContactSubmission({ name, email, company, phone, message });
 
   try {
     await sendEmail({ name, email, company, phone, message });

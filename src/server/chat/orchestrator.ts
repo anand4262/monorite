@@ -9,6 +9,8 @@ import { complete, isConfigured } from "./llm/provider";
 import { conversationStore } from "./store";
 import { shouldExtractLead, extractLead } from "./lead/intake";
 import { extractContactDetailsLocally } from "./lead/local-contact-extractor";
+import { notifyTelegram } from "./lead/telegram-notify";
+import { upsertChatLead } from "@/server/db/models/chat-lead";
 import type { GenerateReplyInput, GenerateReplyResult } from "./types";
 
 // A hard ceiling on the moderation+completion step, independent of
@@ -144,14 +146,23 @@ export async function generateReply(input: GenerateReplyInput): Promise<Generate
   const conversationIsSubstantial = shouldExtractLead(input.messages, Boolean(input.attachedDocumentText));
 
   if (conversationIsSubstantial) {
-    void extractLead(
-      input.sessionId,
-      input.origin,
-      [...input.messages, assistantMessage],
-      input.attachedDocumentText,
-    ).then((lead) => {
-      if (lead) void conversationStore.saveLead(lead);
-    });
+    const fullTranscript = [...input.messages, assistantMessage];
+    void extractLead(input.sessionId, input.origin, fullTranscript, input.attachedDocumentText).then(
+      async (lead) => {
+        if (!lead) return;
+        // Every turn past the "substantial" threshold re-runs extractLead
+        // with a fuller transcript, so the stored lead keeps improving —
+        // but the Telegram ping should only fire once per session, not
+        // once per follow-up question in the same conversation.
+        const isFirstCapture = !(await conversationStore.getLead(input.sessionId));
+        void conversationStore.saveLead(lead);
+        // Unlike the Telegram ping (a one-time notification), this is the
+        // durable record — it should stay current, so it upserts on every
+        // qualifying turn rather than only the first.
+        void upsertChatLead(lead, fullTranscript);
+        if (isFirstCapture) void notifyTelegram(lead, fullTranscript);
+      },
+    );
   }
 
   // Synchronous, local, no network — safe to check on the critical path
